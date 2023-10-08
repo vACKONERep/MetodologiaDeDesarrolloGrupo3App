@@ -1,7 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.Toast.Configuration;
+@inherits LayoutComponentBase
 
 <PageTitle>MetodologiaDeDesarrolloGrupo3App</PageTitle>
-
+<BlazoredToasts Position="ToastPosition.BottomLeft"
+                Timeout="5"
+                ShowProgressBar="true" 
+                ShowCloseButton = "true" />
 <div class="page">
     <div class="sidebar">
         <NavMenu />

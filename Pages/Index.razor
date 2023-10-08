@@ -1,7 +1,152 @@
 ﻿@page "/"
+@using MetodologiaDeDesarrolloGrupo3App.Authentication;
+@using MetodologiaDeDesarrolloGrupo3App.Controllers
+@using MetodologiaDeDesarrolloGrupo3App.Models.Emisor
+@using System.Security.Claims;
+@inject IJSRuntime js
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<AuthorizeView>
+    <Authorized>
 
-Welcome to your new app.
+        <label for="infoSelect">Selecciona una opción:</label>
+        <select id="infoSelect" @onchange="CargarInformacion">
+            <option value="1">Quito</option>
+            <option value="2">Guayaquil</option>
+            <option value="3">Cuenca</option>
+            <option value="4">Manta</option>
+        </select>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Código Emisor</th>
+                    <th>Nombre Emisor</th>
+                    <th>Número Ruc</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (emisores != null)
+                {
+                    @foreach (var item in emisores)
+                    {
+                        <tr>
+                            <td>@item.Codigo</td>
+                            <td>@item.NombreEmisor</td>
+                            <td>@item.NumeroRuc</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </Authorized>
+    <NotAuthorized>
+        <h1>Por favor inicie sesión para acceder a todas las características!</h1>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    @inject IToastService ToastService
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private ClaimsPrincipal AuthenticationStateUser { get; set; }
+    private ClaimsPrincipal AuthenticationStateProviderUser { get; set; }
+
+    private List<Emisor> emisores { get; set; }
+
+    private async Task CargarInformacion(ChangeEventArgs e)
+    {
+        UserController userController = new UserController();
+
+        AuthenticationState authenticationState;
+
+        authenticationState = await authenticationStateTask;
+        this.AuthenticationStateUser = authenticationState.User;
+
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+        authenticationState = await customAuthStateProvider.GetAuthenticationStateAsync();
+        this.AuthenticationStateProviderUser = authenticationState.User;
+         
+        var authState = authenticationState;
+
+        var codigoCompania = authState.User.FindFirst(c => c.Type == ClaimTypes.PrimarySid)?.Value;
+        var codigoEmisor = authState.User.FindFirst(c => c.Type == ClaimTypes.GroupSid)?.Value;
+
+        string opcionSeleccionada = e.Value.ToString();
+
+        switch (opcionSeleccionada)
+        {
+            case "1":
+                if (1 == int.Parse(codigoCompania))
+                {
+                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
+                    StateHasChanged();
+                    break;
+                }
+                else
+                {
+                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
+                    emisores = null;
+                    StateHasChanged();
+                    ToastService.ClearSuccessToasts();
+                    return;
+                }
+            case "2":
+                if (2 == int.Parse(codigoCompania))
+                {
+                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
+                    StateHasChanged();
+                    
+                    break;
+                }
+                else
+                {
+                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
+                    emisores = null;
+                    StateHasChanged();
+                    ToastService.ClearSuccessToasts();
+                    return;
+                }
+            case "3":
+                if (3 == int.Parse(codigoCompania))
+                {
+                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
+                    StateHasChanged();
+                    break;
+                }
+                else
+                {
+                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
+                    ToastService.ClearSuccessToasts();
+                    emisores = null;
+                    StateHasChanged();
+                    return;
+                }
+            case "4":
+                if (4 == int.Parse(codigoCompania))
+                {
+                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
+                    StateHasChanged();
+                    break;
+                }
+                else
+                {
+                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
+                    emisores = null;
+                    ToastService.ClearSuccessToasts();
+                    StateHasChanged();
+                    return;
+                }
+            default:
+                emisores = null;
+                break;
+        }
+
+        ToastService.ShowSuccess("Información cargada con exito!");
+        ToastService.ClearWarningToasts();
+    }
+}
