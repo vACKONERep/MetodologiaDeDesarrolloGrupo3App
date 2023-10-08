@@ -26,14 +26,23 @@
 
             </div>
         </div>
+        
     </div>
+    
 </EditForm>
+<div class="login-actions">
+    <a href="/resetPassword">Restablecer contraseña</a>
+</div>
+
+
 
 @code {
     @inject IToastService ToastService
 
     public class UserLogin
     {
+        public UserLogin(){}
+
         [Required(ErrorMessage = "Ingrese su usuario")]
         [StringLength(4, ErrorMessage = "Contraseña máximo 4 caracteres")]
         public string UserName { get; set; }

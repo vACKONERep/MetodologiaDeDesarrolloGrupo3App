@@ -62,7 +62,11 @@
     }
 
 .login-actions {
-    margin-top: 15px;
+    display:flex;
+    align-content: center;
+    justify-self: center;
+    margin: -20px;
+    margin-left: 85px;
     text-align: center;
 }
 
