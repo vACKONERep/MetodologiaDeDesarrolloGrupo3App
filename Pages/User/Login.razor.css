@@ -40,6 +40,14 @@
     border-radius: 4px;
 }
 
+::deep .login-form select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 .for-input {
     width: 100%;
     padding: 12px 15px;
@@ -47,6 +55,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
 .login-btn {
     width: 100%;
     padding: 12px;

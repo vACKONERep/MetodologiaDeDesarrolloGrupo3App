@@ -11,14 +11,7 @@
 <AuthorizeView>
     <Authorized>
 
-        <label for="infoSelect">Selecciona una opción:</label>
-        <select id="infoSelect" @onchange="CargarInformacion">
-            <option value="1">Quito</option>
-            <option value="2">Guayaquil</option>
-            <option value="3">Cuenca</option>
-            <option value="4">Manta</option>
-        </select>
-
+        <h1>Información del emisor</h1>
         <table class="table">
             <thead>
                 <tr>
@@ -58,7 +51,7 @@
 
     private List<Emisor> emisores { get; set; }
 
-    private async Task CargarInformacion(ChangeEventArgs e)
+    protected override async Task OnInitializedAsync()
     {
         UserController userController = new UserController();
 
@@ -70,83 +63,26 @@
         var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
         authenticationState = await customAuthStateProvider.GetAuthenticationStateAsync();
         this.AuthenticationStateProviderUser = authenticationState.User;
-         
+
         var authState = authenticationState;
 
-        var codigoCompania = authState.User.FindFirst(c => c.Type == ClaimTypes.PrimarySid)?.Value;
-        var codigoEmisor = authState.User.FindFirst(c => c.Type == ClaimTypes.GroupSid)?.Value;
-
-        string opcionSeleccionada = e.Value.ToString();
-
-        switch (opcionSeleccionada)
+        if (authState.User.Identity.IsAuthenticated)
         {
-            case "1":
-                if (1 == int.Parse(codigoCompania))
-                {
-                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
-                    StateHasChanged();
-                    break;
-                }
-                else
-                {
-                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
-                    emisores = null;
-                    StateHasChanged();
-                    ToastService.ClearSuccessToasts();
-                    return;
-                }
-            case "2":
-                if (2 == int.Parse(codigoCompania))
-                {
-                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
-                    StateHasChanged();
-                    
-                    break;
-                }
-                else
-                {
-                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
-                    emisores = null;
-                    StateHasChanged();
-                    ToastService.ClearSuccessToasts();
-                    return;
-                }
-            case "3":
-                if (3 == int.Parse(codigoCompania))
-                {
-                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
-                    StateHasChanged();
-                    break;
-                }
-                else
-                {
-                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
-                    ToastService.ClearSuccessToasts();
-                    emisores = null;
-                    StateHasChanged();
-                    return;
-                }
-            case "4":
-                if (4 == int.Parse(codigoCompania))
-                {
-                    emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
-                    StateHasChanged();
-                    break;
-                }
-                else
-                {
-                    ToastService.ShowWarning("Usted no tiene sucursales en esta región");
-                    emisores = null;
-                    ToastService.ClearSuccessToasts();
-                    StateHasChanged();
-                    return;
-                }
-            default:
-                emisores = null;
-                break;
-        }
+            var codigoCompania = authState.User.FindFirst(c => c.Type == ClaimTypes.PrimarySid)?.Value;
+            var codigoEmisor = authState.User.FindFirst(c => c.Type == ClaimTypes.GroupSid)?.Value;
 
-        ToastService.ShowSuccess("Información cargada con exito!");
-        ToastService.ClearWarningToasts();
+            emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
+
+            if (emisores != null)
+            {
+                ToastService.ShowSuccess("Información cargada con exito!");
+                ToastService.ClearWarningToasts();
+            }
+            else
+            {
+                ToastService.ShowSuccess("No se ha podido cargar información!");
+                ToastService.ClearSuccessToasts();
+            }
+        }
     }
 }

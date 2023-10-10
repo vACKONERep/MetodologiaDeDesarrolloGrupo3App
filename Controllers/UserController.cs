@@ -22,7 +22,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
             return View();
         }
 
-        public async Task<Usuario> GetUserByName(string UserName, string Password)
+        public async Task<Usuario> GetUserByModel(string UserName, string Password, int SelectedProvince)
         {
             try
             {
@@ -42,6 +42,12 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
                 if (usuarios != null)
                 {
                     usuario = usuarios.FirstOrDefault();
+
+                    if (SelectedProvince != usuario.Emisor)
+                    {
+                        usuario.Observacion = "PROVINCIA INCORRECTA";
+                        return usuario;
+                    }
 
                     foreach (var property in typeof(Usuario).GetProperties())
                     {

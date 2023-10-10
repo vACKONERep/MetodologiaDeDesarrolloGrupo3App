@@ -4,14 +4,6 @@
     margin-bottom: 20px;
 }
 
-select {
-    font-size: 16px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 200px;
-}
-
 .table {
     width: 100%;
     border-collapse: collapse;
