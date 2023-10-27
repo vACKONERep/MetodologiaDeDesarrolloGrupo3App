@@ -3,6 +3,7 @@
 @using MetodologiaDeDesarrolloGrupo3App.Controllers
 @using MetodologiaDeDesarrolloGrupo3App.Models.Emisor
 @using System.Security.Claims;
+@using MetodologiaDeDesarrolloGrupo3App.Models.Trabajador;
 @inject IJSRuntime js
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -11,33 +12,121 @@
 <AuthorizeView>
     <Authorized>
 
-        <h1>Información del emisor</h1>
+        <h1>Trabajadores de la sucursal</h1>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Código Emisor</th>
-                    <th>Nombre Emisor</th>
-                    <th>Número Ruc</th>
+                    <th>Código</th>
+                    <th>ID Trabajador</th>
+                    <th>Tipo de Trabajador</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Nombres</th>
+                    <th>Identificación</th>
+                    <th>Entidad Bancaria</th>
+                    <th>Carnet IESS</th>
+                    <th>Dirección</th>
+                    <th>Teléfono Fijo</th>
+                    <th>Teléfono Móvil</th>
+                    <th>Género</th>
+                    <th>Número de Cuenta Bancaria</th>
+                    <th>Código Categoría Ocupación</th>
+                    <th>Ocupación</th>
+                    <th>Centro de Costos</th>
+                    <th>Nivel Salarial</th>
+                    <th>Estado del Trabajador</th>
+                    <th>Tipo de Contrato</th>
+                    <th>Tipo de Cese</th>
+                    <th>Estado Civil</th>
+                    <th>Tipo de Comisión</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Fecha de Ingreso</th>
+                    <th>Fecha de Cese</th>
+                    <th>Período de Vacaciones</th>
+                    <th>Fecha de Reingreso</th>
+                    <th>Fecha Última Actualización</th>
+                    <th>Es Reingreso</th>
+                    <th>Banco CTA CTE</th>
+                    <th>Tipo de Cuenta</th>
+                    <th>RSV Indem Acumul</th>
+                    <th>Año Últ Rsva Indemni</th>
+                    <th>Mes Últ Rsva Indemni</th>
+                    <th>Forma Cálculo 13ro</th>
+                    <th>Forma Cálculo 14ro</th>
+                    <th>Boni Complementaria</th>
+                    <th>Boni Especial</th>
+                    <th>Remuneración Mínima</th>
+                    <th>Cuota Cuenta Corriente</th>
+                    <th>Fondo Reserva</th>
+                    <th>Mensaje</th>
                 </tr>
             </thead>
             <tbody>
-                @if (emisores != null)
+                @if (trabajadores != null && trabajadores.Any())
                 {
-                    @foreach (var item in emisores)
+                    @foreach (var trabajador in trabajadores)
                     {
                         <tr>
-                            <td>@item.Codigo</td>
-                            <td>@item.NombreEmisor</td>
-                            <td>@item.NumeroRuc</td>
+                            <td>@trabajador.COMP_Codigo</td>
+                            <td>@trabajador.Id_Trabajador</td>
+                            <td>@trabajador.Tipo_trabajador</td>
+                            <td>@trabajador.Apellido_Paterno</td>
+                            <td>@trabajador.Apellido_Materno</td>
+                            <td>@trabajador.Nombres</td>
+                            <td>@trabajador.Identificacion</td>
+                            <td>@trabajador.Entidad_Bancaria</td>
+                            <td>@trabajador.CarnetIESS</td>
+                            <td>@trabajador.Direccion</td>
+                            <td>@trabajador.Telefono_Fijo</td>
+                            <td>@trabajador.Telefono_Movil</td>
+                            <td>@trabajador.Genero</td>
+                            <td>@trabajador.Nro_Cuenta_Bancaria</td>
+                            <td>@trabajador.Codigo_Categoria_Ocupacion</td>
+                            <td>@trabajador.Ocupacion</td>
+                            <td>@trabajador.Centro_Costos</td>
+                            <td>@trabajador.Nivel_Salarial</td>
+                            <td>@trabajador.EstadoTrabajador</td>
+                            <td>@trabajador.Tipo_Contrato</td>
+                            <td>@trabajador.Tipo_Cese</td>
+                            <td>@trabajador.EstadoCivil</td>
+                            <td>@trabajador.TipodeComision</td>
+                            <td>@trabajador.FechaNacimiento.ToString("dd/MM/yyyy")</td>
+                            <td>@trabajador.FechaIngreso.ToString("dd/MM/yyyy")</td>
+                            <td>@trabajador.FechaCese.ToString("dd/MM/yyyy")</td>
+                            <td>@trabajador.PeriododeVacaciones</td>
+                            <td>@trabajador.FechaReingreso.ToString("dd/MM/yyyy")</td>
+                            <td>@trabajador.Fecha_Ult_Actualizacion.ToString("dd/MM/yyyy")</td>
+                            <td>@trabajador.EsReingreso</td>
+                            <td>@trabajador.BancoCTA_CTE</td>
+                            <td>@trabajador.Tipo_Cuenta</td>
+                            <td>@trabajador.RSV_Indem_Acumul</td>
+                            <td>@trabajador.Año_Ult_Rsva_Indemni</td>
+                            <td>@trabajador.Mes_Ult_Rsva_Indemni</td>
+                            <td>@trabajador.FormaCalculo13ro</td>
+                            <td>@trabajador.FormaCalculo14ro</td>
+                            <td>@trabajador.BoniComplementaria</td>
+                            <td>@trabajador.BoniEspecial</td>
+                            <td>@trabajador.Remuneracion_Minima</td>
+                            <td>@trabajador.CuotaCuentaCorriente</td>
+                            <td>@trabajador.Fondo_Reserva</td>
+                            <td>@trabajador.Mensaje</td>
                         </tr>
                     }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="40">No hay trabajadores para mostrar</td>
+                    </tr>
                 }
             </tbody>
         </table>
     </Authorized>
+
     <NotAuthorized>
         <h1>Por favor inicie sesión para acceder a todas las características!</h1>
     </NotAuthorized>
+
 </AuthorizeView>
 
 @code {
@@ -49,11 +138,11 @@
     private ClaimsPrincipal AuthenticationStateUser { get; set; }
     private ClaimsPrincipal AuthenticationStateProviderUser { get; set; }
 
-    private List<Emisor> emisores { get; set; }
+    private List<Trabajador> trabajadores { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        UserController userController = new UserController();
+        TrabajadorController trabajadorController = new TrabajadorController();
 
         AuthenticationState authenticationState;
 
@@ -68,14 +157,12 @@
 
         if (authState.User.Identity.IsAuthenticated)
         {
-            var codigoCompania = authState.User.FindFirst(c => c.Type == ClaimTypes.PrimarySid)?.Value;
             var codigoEmisor = authState.User.FindFirst(c => c.Type == ClaimTypes.GroupSid)?.Value;
 
-            emisores = await userController.GetEmisorByCode(int.Parse(codigoEmisor));
+            trabajadores = await trabajadorController.GetTrabajadoresByCode(int.Parse(codigoEmisor));
 
-            if (emisores != null)
+            if (trabajadores != null)
             {
-                ToastService.ShowSuccess("Información cargada con exito!");
                 ToastService.ClearWarningToasts();
             }
             else

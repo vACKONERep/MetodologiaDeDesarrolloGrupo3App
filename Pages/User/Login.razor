@@ -2,47 +2,53 @@
 @using MetodologiaDeDesarrolloGrupo3App.Authentication
 @using MetodologiaDeDesarrolloGrupo3App.Controllers
 @using MetodologiaDeDesarrolloGrupo3App.Models
+@using MetodologiaDeDesarrolloGrupo3App.Models.Emisor;
 @using MetodologiaDeDesarrolloGrupo3App.Models.Users;
 @using System.ComponentModel.DataAnnotations
 @inject AuthenticationStateProvider authState
 @inject IJSRuntime js
 @inject NavigationManager navManager
-<EditForm Model="@model" OnValidSubmit="@Authenticate">
-    <DataAnnotationsValidator />
 
-    <div class="login-container" @onclick:stopPropagation>
-        <div class="login-card">
-            <img src="/css/images/UserProfile.png">
-            <h2>Iniciar Sesión</h2>
-            <div class="login-form">
+<div class="login-container" @onclick:stopPropagation>
+    <div class="login-card">
+        <h2>Iniciar Sesión</h2>
+        <div class="login-form">
+            <EditForm Model="@model" OnValidSubmit="@Authenticate">
+                <DataAnnotationsValidator />
+
                 <ValidationSummary />
                 <label for="email">Correo Electrónico/ Usuario:</label>
-                <InputText @bind-Value="model!.UserName" placeholder="ej: 0000" />
+                <InputText @bind-Value="model!.UserName" placeholder="0000" />
 
                 <label for="password">Contraseña:</label>
                 <InputText @bind-Value="model!.Password" type="password" placeholder="Contraseña" />
 
-                <label for="selector">Provincia:</label>
-                <InputSelect @bind-Value="model.SelectedProvince">
-                    <option value="1">Quito</option>
-                    <option value="2">Guayaquil</option>
-                    <option value="3">Cuenca</option>
-                    <option value="4">Manta</option>
-                </InputSelect>
+                @if (IsAuth)
+                {
+                    <select @bind="CodeSelected">
+                        <option value="0" selected>Seleccione una sucursal...</option>
+                        @foreach (var item in emisores)
+                        {
+                                <option value="@item.Codigo">@item.NombreEmisor</option>
+                        }
+                    </select>
 
-                <button type="submit" class="login-btn">Ingresar</button>
+                    <button class="login-btn" @onclick="CheckEmisor">Continuar</button>
+                }
+                else
+                {
+                    <button class="login-btn" @onclick="Authenticate">Iniciar sesión</button>
 
-            </div>
+                    <div class="login-actions">
+                        <a href="/resetPassword">Restablecer contraseña</a>
+                    </div>
+
+                }
+
+            </EditForm>
         </div>
-
     </div>
-
-</EditForm>
-<div class="login-actions">
-    <a href="/resetPassword">Restablecer contraseña</a>
 </div>
-
-
 
 @code {
     @inject IToastService ToastService
@@ -64,44 +70,68 @@
 
     public UserLogin model { get; set; }
 
-    protected override void OnInitialized() => model ??= new();
+    public Usuario userLogged = new Usuario();
+
+    public List<Emisor> emisores = new List<Emisor>();
+
+    private bool IsAuth { get; set; }
+
+    private int CodeSelected { get; set; }
+
+    protected override async void OnInitialized()
+    {
+        model ??= new();
+
+        EmisorController EC = new EmisorController();
+        emisores = await EC.GetEmisores();
+    }  
 
     private async Task Authenticate()
     {
+        IsAuth = false;
+
         UserController UC = new UserController();
 
-        var usuario = await UC.GetUserByModel(model.UserName, model.Password, model.SelectedProvince);
+        userLogged = await UC.GetUserByModel(model.UserName, model.Password, model.SelectedProvince);
 
-        if (usuario == null)
+        if (userLogged == null)
         {
             ToastService.ShowError($"Ha ocurrido un error en el servidor");
             return;
         }
 
-        switch (usuario.Observacion)
+        switch (userLogged.Observacion)
         {
             case "ERROR":
-                ToastService.ShowError($"Ha ocurrido un error en el servidor");
+                ToastService.ShowError($"Verifique sus datos");
                 navManager.NavigateTo("/");
                 return;
             case "CONTRASEÑA INVALIDA":
                 ToastService.ShowWarning($"Contraseña invalida");
                 navManager.NavigateTo("/");
                 return;
-            case "PROVINCIA INCORRECTA":
-                ToastService.ShowWarning($"Provincia incorrecta");
-                navManager.NavigateTo("/");
-                return;
             default:
                 break;
         }
-        usuario.UserName = model.UserName;
-        usuario.Password = model.Password;
 
-        var customAuthStateProvider = (CustomAuthenticationStateProvider)authState;
-        await customAuthStateProvider.UpdateAuthenticationState(usuario);
+        IsAuth = true;
 
-        navManager.NavigateTo("/", true);
+        userLogged.UserName = model.UserName;
+        userLogged.Password = model.Password;
+    }
+
+    public async Task CheckEmisor()
+    {
+        if(CodeSelected == userLogged.Emisor)
+        {
+            var customAuthStateProvider = (CustomAuthenticationStateProvider)authState;
+            await customAuthStateProvider.UpdateAuthenticationState(userLogged);
+            navManager.NavigateTo("/" , true);
+        }
+        else
+        {
+            ToastService.ShowWarning($"Emisor no válido");
+        }
     }
 
 }

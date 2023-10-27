@@ -1,23 +1,64 @@
 ﻿@using Blazored.Toast.Configuration;
+@using System.Security.Claims;
+@using MetodologiaDeDesarrolloGrupo3App.Authentication;
 @inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>MetodologiaDeDesarrolloGrupo3App</PageTitle>
 <BlazoredToasts Position="ToastPosition.BottomLeft"
                 Timeout="5"
-                ShowProgressBar="true" 
-                ShowCloseButton = "true" />
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+                ShowProgressBar="true"
+                ShowCloseButton="true" />
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+<AuthorizeView>
+    <Authorized>
+        <div class="page">
+
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+
+            <main>
+                <div class="top-row px-4">
+                    <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+                </div>
+
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
         </div>
+    </Authorized>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    <NotAuthorized>
+        <main>
+            <article class="content px-4">
+                <MetodologiaDeDesarrolloGrupo3App.Pages.User.Login></MetodologiaDeDesarrolloGrupo3App.Pages.User.Login>
+            </article>
+        </main>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    @inject IToastService ToastService
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private ClaimsPrincipal AuthenticationStateUser { get; set; }
+    private ClaimsPrincipal? AuthenticationStateProviderUser { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authenticationState;
+
+        authenticationState = await authenticationStateTask;
+        this.AuthenticationStateUser = authenticationState.User;
+
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+        authenticationState = await customAuthStateProvider.GetAuthenticationStateAsync();
+        this.AuthenticationStateProviderUser = authenticationState.User;
+    }
+}
+

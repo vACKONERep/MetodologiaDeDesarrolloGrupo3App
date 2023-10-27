@@ -4,7 +4,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Grupo 3</a>
+        <a class="navbar-brand" href="">Grupo 3 Blazor API Exercise</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -13,20 +13,17 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-
-        <AuthorizeView>
-            <NotAuthorized>
-                <div class="nav-item px-">
-                    <MetodologiaDeDesarrolloGrupo3App.Pages.User.Login></MetodologiaDeDesarrolloGrupo3App.Pages.User.Login>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-
         <AuthorizeView>
             <Authorized>
+
+                <NavLink class="nav-link" @onclick="ShowEmployeesList">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Listado de Empleados
+                </NavLink>
+
                 <NavLink class="nav-link" @onclick="LogOutUser">
                     <span class="oi oi-account-logout" aria-hidden="true"></span> Cerrar Sesión
                 </NavLink>
+
             </Authorized>
         </AuthorizeView>
     </nav>
@@ -47,6 +44,12 @@
         var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
         await customAuthStateProvider.UpdateAuthenticationState(null);
 
+        navManager.NavigateTo("/", true);
+
+    }
+
+    private async Task ShowEmployeesList()
+    {
         navManager.NavigateTo("/", true);
 
     }

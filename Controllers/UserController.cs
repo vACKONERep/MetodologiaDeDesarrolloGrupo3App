@@ -43,12 +43,6 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
                 {
                     usuario = usuarios.FirstOrDefault();
 
-                    if (SelectedProvince != usuario.Emisor)
-                    {
-                        usuario.Observacion = "PROVINCIA INCORRECTA";
-                        return usuario;
-                    }
-
                     foreach (var property in typeof(Usuario).GetProperties())
                     {
                         if (property.PropertyType == typeof(string))
@@ -61,45 +55,14 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
                             }
                         }
                     }
+                    return usuario;
                 }
                 else
                     return null;
-
-                return usuario;
             }
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        public async Task<List<Emisor>> GetEmisorByCode(int code)
-        {
-            try
-            {
-                List<Emisor> listEmisor = await GetEmisores();
-
-                return listEmisor.Where(e => e.Codigo == code).ToList();
-            }
-            catch (Exception)
-            {
-                return new List<Emisor>();
-            }
-        }
-
-        public async Task<List<Emisor>> GetEmisores()
-        {
-            try
-            {
-                HttpResponseMessage httpResponse = await httpClient.GetAsync($"Varios/GetEmisor");
-
-                string content = await httpResponse.Content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<List<Emisor>>(content);
-            }
-            catch (Exception)
-            {
-                return new List<Emisor>();
             }
         }
     }
