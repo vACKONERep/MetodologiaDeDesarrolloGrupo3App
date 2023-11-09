@@ -14,12 +14,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
         {
             //Ignorar errores de SSL al realizar peticiones a HTTP/HTTPS
             httpClient = new HttpClient(new HttpClientHandler() { ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }, }, false);
-            httpClient.Timeout = TimeSpan.FromSeconds(7);
             httpClient.BaseAddress = new Uri("http://apiservicios.ecuasolmovsa.com:3009/api/");
-        }
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public async Task<Usuario> GetUserByModel(string UserName, string Password, int SelectedProvince)

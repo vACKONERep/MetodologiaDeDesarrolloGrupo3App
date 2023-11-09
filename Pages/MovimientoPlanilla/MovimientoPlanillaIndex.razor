@@ -1,0 +1,231 @@
+﻿@page "/MovimientoPlanillaIndex"
+
+@using MetodologiaDeDesarrolloGrupo3App.Controllers;
+@using MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla
+
+@inject NavigationManager NavManager
+@inject IToastService ToastService
+
+<PageTitle>Movimiento Planilla</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h2>Lista de Movimiento Planilla</h2>
+        <br>
+        <input @bind="SearchInput" placeholder="Concepto del movimiento">
+        <button class="create-button" @onclick="(() => Search())">Buscar</button>
+        <br>
+        <br>
+        @if (forCreate)
+        {
+            <input @bind="MovimientoPlanillaForCreate.CodigoConcepto" placeholder="Código de Plantilla">
+            <select @bind="MovimientoPlanillaForCreate.TipoOperacion">
+            </select>
+            <br>
+            <button class="create-button" @onclick="(() => CreateMovimiento())">Crear</button>
+            <br>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else if (forEdit)
+        {
+            <input @bind="MovimientoPlanillaForEdit.CodigoConcepto" placeholder="Código Planilla">
+            <input @bind="MovimientoPlanillaForEdit.Concepto" placeholder="Código del Centro">
+            <input @bind="MovimientoPlanillaForEdit.Prioridad" placeholder="Código del Centro">
+            <select @bind="MovimientoPlanillaForEdit.TipoOperacion">
+                <option value="@MovimientoPlanillaForEdit.TipoOperacion">@MovimientoPlanillaForEdit.TipoOperacion</option>
+                <option value=" ">Sin</option>
+                @foreach (var item in movimientosPlanilla[0].TipoOperacionList)
+                {
+                    <option value="@item.CodigoTipooperacion">@item.NombreOperacion</option>
+                }
+            </select>
+            <input @bind="MovimientoPlanillaForEdit.Cuenta1" placeholder="Cuenta 1...">
+            <input @bind="MovimientoPlanillaForEdit.Cuenta2" placeholder="Cuenta 2...">
+            <input @bind="MovimientoPlanillaForEdit.Cuenta3" placeholder="Cuenta 3...">
+            <input @bind="MovimientoPlanillaForEdit.Cuenta4" placeholder="Cuenta 4...">
+            <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion1">
+                <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion1">@MovimientoPlanillaForEdit.MovimientoExcepcion1</option>
+                @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+                {
+                    <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
+                }
+            </select>
+            <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion2">
+                <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion2">@MovimientoPlanillaForEdit.MovimientoExcepcion2</option>
+                @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+                {
+                    <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
+                }
+            </select>
+            <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion3">
+                <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion3">@MovimientoPlanillaForEdit.MovimientoExcepcion3</option>
+                @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion3List)
+                {
+                    <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
+                }
+            </select>
+
+            <br>
+            <button class="create-button" @onclick="(() => EditMovimiento())">Editar</button>
+            <br>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else
+        {
+            <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro</button>
+        }
+
+        <br>
+        <br>
+
+        <table class="centros-table">
+            <thead>
+                <tr>
+                    <th>Código Concepto</th>
+                    <th>Concepto</th>
+                    <th>Prioridad</th>
+                    <th>Tipo Operación</th>
+                    <th>Cuenta 1</th>
+                    <th>Cuenta 2</th>
+                    <th>Cuenta 3</th>
+                    <th>Cuenta 4</th>
+                    <th>Movimiento Exc. 1</th>
+                    <th>Movimiento Exc. 2</th>
+                    <th>Movimiento Exc. 3</th>
+                    <th>Aplica Iess</th>
+                    <th>Aplica Imp. Renta</th>
+                    <th>Empresa Afecta Iess</th>
+                    <th>Editar</th>
+                    <th>Borrar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movimiento in movimientosPlanilla)
+                {
+                    <tr>
+                        <td>@movimiento.CodigoConcepto</td>
+                        <td>@movimiento.Concepto</td>
+                        <td>@movimiento.Prioridad</td>
+                        <td>@movimiento.TipoOperacion</td>
+                        <td>@movimiento.Cuenta1</td>
+                        <td>@movimiento.Cuenta2</td>
+                        <td>@movimiento.Cuenta3</td>
+                        <td>@movimiento.Cuenta4</td>
+                        <td>@movimiento.MovimientoExcepcion1</td>
+                        <td>@movimiento.MovimientoExcepcion2</td>
+                        <td>@movimiento.MovimientoExcepcion3</td>
+                        <td>@movimiento.Aplica_iess</td>
+                        <td>@movimiento.Aplica_imp_renta</td>
+                        <td>@movimiento.Empresa_Afecta_Iess</td>
+                        <td>
+                            <button class="edit-button" @onclick="(() => BtnEdit(movimiento))">Editar</button>
+                        </td>
+                        <td>
+                            <button class="delete-button" @onclick="(() => DeleteMovimiento(movimiento))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    #region Movimientos properties Vars n Props
+    public bool forCreate { get; set; }
+    public bool forEdit { get; set; }
+
+    public string SearchInput { get; set; }
+
+    public MovimientoPlanilla MovimientoPlanillaForCreate { get; set; }
+    public MovimientoPlanilla MovimientoPlanillaForEdit { get; set; }
+    public List<MovimientoPlanilla> movimientosPlanilla = new List<MovimientoPlanilla>();
+    public MovimientoPlanillaController movimientoPlanillaController = new MovimientoPlanillaController();
+    #endregion
+
+    #region Events
+
+    protected override async Task OnInitializedAsync()
+    {
+        forEdit = false;
+        forCreate = false;
+        movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
+    }
+
+    private async Task Search()
+    {
+        if (string.IsNullOrEmpty(SearchInput))
+        {
+            movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
+        }
+        else
+        {
+            movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantillaByName(SearchInput);
+        }
+    }
+
+    private async Task BtnCreate()
+    {
+        forEdit = false;
+        forCreate = true;
+        MovimientoPlanillaForCreate = new MovimientoPlanilla();
+    }
+
+    private async Task BtnCancel()
+    {
+        forCreate = false;
+        forEdit = false;
+    }
+
+    private async Task CreateMovimiento()
+    {
+        if (await movimientoPlanillaController.CreateMovimientoPlanilla(MovimientoPlanillaForCreate))
+        {
+            ToastService.ShowSuccess("Se ha creado el movimiento");
+            forCreate = false;
+            forEdit = false;
+            movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido crear el movimiento");
+        }
+    }
+
+    private async Task BtnEdit(MovimientoPlanilla movimiento)
+    {
+        forCreate = false;
+        forEdit = true;
+        MovimientoPlanillaForEdit = movimiento;
+    }
+
+    private async Task EditMovimiento()
+    {
+
+        if (await movimientoPlanillaController.UpdateMovimientoPlanilla(MovimientoPlanillaForEdit))
+        {
+            movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
+            ToastService.ShowSuccess("Se ha actualizado el movimiento planilla");
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido actualizar el movimiento planilla");
+        }
+        forEdit = false;
+    }
+
+    private async Task DeleteMovimiento(MovimientoPlanilla movimiento)
+    {
+        if (await movimientoPlanillaController.DeleteMovimientoPlanilla(movimiento))
+        {
+            movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
+            ToastService.ShowSuccess("Se ha borrado el movimiento planilla");
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido borrar el centro de costos");
+        }
+    }
+    #endregion
+}

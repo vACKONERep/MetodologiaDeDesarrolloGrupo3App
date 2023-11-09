@@ -7,7 +7,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Models.Emisor
         public Emisor() { }
 
         [JsonProperty("Codigo")]
-        public int Codigo { get; set; }
+        public Int32 Codigo { get; set; }
 
         [JsonProperty("NombreEmisor")]
         public string NombreEmisor { get; set; }

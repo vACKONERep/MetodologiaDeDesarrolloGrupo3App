@@ -1,0 +1,169 @@
+﻿@page "/CentroDeCostosIndex"
+
+@using MetodologiaDeDesarrolloGrupo3App.Controllers;
+@using MetodologiaDeDesarrolloGrupo3App.Models.CentroCostos
+
+@inject NavigationManager NavManager
+@inject IToastService ToastService
+
+<PageTitle>Centro de Costos</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h2>Lista de Centros de Costo</h2>
+        <br>
+        <input @bind="SearchInput" placeholder="Nombre del Centro">
+        <button class="create-button" @onclick="(() => Search())">Buscar</button>
+        <br>
+        <br>
+        @if (forCreate)
+        {
+            <input @bind="CentroCostosForCreate.Codigo" placeholder="Código del Centro">
+            <input @bind="CentroCostosForCreate.NombreCentroCostos" placeholder="Código del Centro">
+            <br>
+            <button class="create-button" @onclick="(() => CreateCentro())">Crear</button>
+            <br>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else if (forEdit)
+        {
+            <input @bind="CentroCostosForEdit.Codigo" placeholder="Código del Centro">
+            <input @bind="CentroCostosForEdit.NombreCentroCostos" placeholder="Código del Centro">
+            <br>
+            <button class="create-button" @onclick="(() => EditCentro())">Editar</button>
+            <br>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else
+        {
+            <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro</button>
+        }
+
+        <br>
+        <br>
+
+        <table class="centros-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre Centro de Costos</th>
+                    <th>Editar</th>
+                    <th>Borrar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var centro in centrosDeCostos)
+                {
+                    <tr>
+                        <td>@centro.Codigo</td>
+                        <td>@centro.NombreCentroCostos</td>
+                        <td>
+                            <button class="edit-button" @onclick="(() => BtnEdit(centro))">Editar</button>
+                        </td>
+                        <td>
+                            <button class="delete-button" @onclick="(() => DeleteCentro(centro))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+
+    #region Cantro costos properties Vars n Props
+    public bool forCreate { get; set; }
+    public bool forEdit { get; set; }
+
+    public string SearchInput { get; set; }
+
+    public CentroCostos CentroCostosForCreate { get; set; }
+    public CentroCostos CentroCostosForEdit { get; set; }
+    public List<CentroCostos> centrosDeCostos = new List<CentroCostos>();
+    public CentroCostosController centroDeCostosController = new CentroCostosController();
+    #endregion
+
+    #region Events
+
+    protected override async Task OnInitializedAsync()
+    {
+        centrosDeCostos = await centroDeCostosController.GetCentrosCostos();
+    }
+
+    private async Task Search()
+    {
+        if (string.IsNullOrEmpty(SearchInput))
+        {
+            centrosDeCostos = await centroDeCostosController.GetCentrosCostos();
+        }
+        else
+        {
+            centrosDeCostos = await centroDeCostosController.GetCentrosCostosByName(SearchInput);
+        }
+    }
+
+    private async Task BtnCreate()
+    {
+        forEdit = false;
+        forCreate = true;
+        CentroCostosForCreate = new CentroCostos();
+    }
+
+    private async Task BtnCancel()
+    {
+        forCreate = false;
+        forEdit = false;
+    }
+
+    private async Task CreateCentro()
+    {
+        if (await centroDeCostosController.CreateCentrosCostos(CentroCostosForCreate))
+        {
+            ToastService.ShowSuccess("Se ha creado el centro de costos");
+            forCreate = false;
+            forEdit = false;
+            centrosDeCostos = await centroDeCostosController.GetCentrosCostos();
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido crear el centro de costos");
+        }
+    }
+
+    private async Task BtnEdit(CentroCostos centro)
+    {
+        forCreate = false;
+        forEdit = true;
+        CentroCostosForEdit = centro;
+    }
+
+    private async Task EditCentro()
+    {
+
+        if (await centroDeCostosController.UpdateCentrosCostos(CentroCostosForEdit))
+        {
+            centrosDeCostos = await centroDeCostosController.GetCentrosCostos();
+            ToastService.ShowSuccess("Se ha actualizado el centro de costos");
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido actualizar el centro de costos");
+        }
+        forEdit = false;
+    }
+
+    private async Task DeleteCentro(CentroCostos centro)
+    {
+        if (await centroDeCostosController.DeleteCentrosCostos(centro))
+        {
+            centrosDeCostos = await centroDeCostosController.GetCentrosCostos();
+            ToastService.ShowSuccess("Se ha borrado el centro de costos");
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido borrar el centro de costos");
+        }
+    }
+    #endregion
+}

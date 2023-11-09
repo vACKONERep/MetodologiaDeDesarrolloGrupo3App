@@ -16,8 +16,16 @@
         <AuthorizeView>
             <Authorized>
 
-                <NavLink class="nav-link" @onclick="ShowEmployeesList">
+                <NavLink class="nav-link" @onclick="ShowCentroDeCostos">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Centro de Costos
+                </NavLink>
+
+                <NavLink class="nav-link" @onclick="ShowTrabajadoresList">
                     <span class="oi oi-list-rich" aria-hidden="true"></span> Listado de Empleados
+                </NavLink>
+
+                <NavLink class="nav-link" @onclick="ShowMovimientosList">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Movimientos Planilla
                 </NavLink>
 
                 <NavLink class="nav-link" @onclick="LogOutUser">
@@ -48,9 +56,21 @@
 
     }
 
-    private async Task ShowEmployeesList()
+    private async Task ShowTrabajadoresList()
     {
-        navManager.NavigateTo("/", true);
+        navManager.NavigateTo("/TrabajadoresIndex", true);
+
+    }
+
+    private async Task ShowMovimientosList()
+    {
+        navManager.NavigateTo("/MovimientoPlanillaIndex", true);
+
+    }
+
+    private async Task ShowCentroDeCostos()
+    {
+        navManager.NavigateTo("/CentroDeCostosIndex", true);
 
     }
 }
