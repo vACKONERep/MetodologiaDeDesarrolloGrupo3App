@@ -8,127 +8,198 @@
 
 <PageTitle>Movimiento Planilla</PageTitle>
 
-<AuthorizeView>
-    <Authorized>
-        <h2>Lista de Movimiento Planilla</h2>
-        <br>
-        <input @bind="SearchInput" placeholder="Concepto del movimiento">
-        <button class="create-button" @onclick="(() => Search())">Buscar</button>
-        <br>
-        <br>
-        @if (forCreate)
-        {
-            <input @bind="MovimientoPlanillaForCreate.CodigoConcepto" placeholder="Código de Plantilla">
-            <select @bind="MovimientoPlanillaForCreate.TipoOperacion">
-            </select>
-            <br>
-            <button class="create-button" @onclick="(() => CreateMovimiento())">Crear</button>
-            <br>
-            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
-        }
-        else if (forEdit)
-        {
-            <input @bind="MovimientoPlanillaForEdit.CodigoConcepto" placeholder="Código Planilla">
-            <input @bind="MovimientoPlanillaForEdit.Concepto" placeholder="Código del Centro">
-            <input @bind="MovimientoPlanillaForEdit.Prioridad" placeholder="Código del Centro">
-            <select @bind="MovimientoPlanillaForEdit.TipoOperacion">
-                <option value="@MovimientoPlanillaForEdit.TipoOperacion">@MovimientoPlanillaForEdit.TipoOperacion</option>
-                <option value=" ">Sin</option>
-                @foreach (var item in movimientosPlanilla[0].TipoOperacionList)
-                {
-                    <option value="@item.CodigoTipooperacion">@item.NombreOperacion</option>
-                }
-            </select>
-            <input @bind="MovimientoPlanillaForEdit.Cuenta1" placeholder="Cuenta 1...">
-            <input @bind="MovimientoPlanillaForEdit.Cuenta2" placeholder="Cuenta 2...">
-            <input @bind="MovimientoPlanillaForEdit.Cuenta3" placeholder="Cuenta 3...">
-            <input @bind="MovimientoPlanillaForEdit.Cuenta4" placeholder="Cuenta 4...">
-            <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion1">
-                <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion1">@MovimientoPlanillaForEdit.MovimientoExcepcion1</option>
-                @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
-                {
-                    <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
-                }
-            </select>
-            <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion2">
-                <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion2">@MovimientoPlanillaForEdit.MovimientoExcepcion2</option>
-                @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
-                {
-                    <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
-                }
-            </select>
-            <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion3">
-                <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion3">@MovimientoPlanillaForEdit.MovimientoExcepcion3</option>
-                @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion3List)
-                {
-                    <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
-                }
-            </select>
 
-            <br>
-            <button class="create-button" @onclick="(() => EditMovimiento())">Editar</button>
-            <br>
-            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
-        }
-        else
+<h2>Movimiento de Planilla</h2>
+<hr>
+<div class="search-container">
+    <input class="search-input" @bind="SearchInput" placeholder="Concepto del movimiento...">
+    <button class="search-button" @onclick="(() => Search())">Buscar</button>
+</div>
+<hr>
+@if (forCreate)
+{
+    <div class="form-row">
+        <div class="form-column">
+            <div class="form-group">
+                <label class="form-label" for="codigoPlanilla">Código Planilla</label>
+                <input class="form-control" id="codigoPlanilla" @bind="MovimientoPlanillaForCreate.CodigoConcepto" placeholder="Ingrese el código de la planilla">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="concepto">Concepto</label>
+                <input class="form-control" id="concepto" @bind="MovimientoPlanillaForCreate.Concepto" placeholder="Ingrese el concepto">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="prioridad">Prioridad</label>
+                <input class="form-control" id="prioridad" @bind="MovimientoPlanillaForCreate.Prioridad" placeholder="Ingrese la prioridad">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="tipoOperacion">Tipo de Operación</label>
+                <select class="form-control" id="tipoOperacion" @bind="MovimientoPlanillaForCreate.TipoOperacion">
+                    <!-- Opciones del select aquí -->
+                </select>
+            </div>
+
+            <div class="form-column">
+                <div class="form-group">
+                    <label class="form-label" for="aplicaIess">Aplica IESS</label>
+                    <input class="form-control" id="aplicaIess" @bind="MovimientoPlanillaForCreate.Aplica_iess" placeholder="Aplica IESS...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="aplicaImpRenta">Aplica Impuesto a la Renta</label>
+                    <input class="form-control" id="aplicaImpRenta" @bind="MovimientoPlanillaForCreate.Aplica_imp_renta" placeholder="Aplica Impuesto a la Renta...">
+                </div>
+            </div>
+            <div class="form-column">
+                <div class="form-group">
+                    <label class="form-label" for="empresaAfectaIess">Empresa Afecta IESS</label>
+                    <input class="form-control" id="empresaAfectaIess" @bind="MovimientoPlanillaForCreate.Aplica_imp_renta" placeholder="Empresa Afecta IESS...">
+                </div>
+            </div>
+        </div>
+        <div class="form-column">
+            <div class="form-group">
+                <label class="form-label" for="cuenta1">Cuenta 1</label>
+                <input class="form-control" id="cuenta1" @bind="MovimientoPlanillaForCreate.Cuenta1" placeholder="Ingrese la cuenta 1">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cuenta2">Cuenta 2</label>
+                <input class="form-control" id="cuenta2" @bind="MovimientoPlanillaForCreate.Cuenta2" placeholder="Ingrese la cuenta 2">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cuenta3">Cuenta 3</label>
+                <input class="form-control" id="cuenta3" @bind="MovimientoPlanillaForCreate.Cuenta3" placeholder="Ingrese la cuenta 3">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="cuenta4">Cuenta 4</label>
+                <input class="form-control" id="cuenta4" @bind="MovimientoPlanillaForCreate.Cuenta4" placeholder="Ingrese la cuenta 4">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="movExcepcion3">Movimiento Excepción 1</label>
+                <select class="form-control" id="movExcepcion1" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion1">
+
+                </select>
+
+                <label class="form-label" for="movExcepcion3">Movimiento Excepción 2</label>
+                <select class="form-control" id="movExcepcion2" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion2">
+
+                </select>
+
+                <label class="form-label" for="movExcepcion3">Movimiento Excepción 3</label>
+                <select class="form-control" id="movExcepcion3" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion3">
+
+                </select>
+            </div>
+        </div>
+    </div>
+    <button class="create-button" @onclick="(() => CreateMovimiento())">Crear</button>
+    <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+}
+else if (forEdit)
+{
+    <input @bind="MovimientoPlanillaForEdit.CodigoConcepto" placeholder="Código Planilla">
+    <input @bind="MovimientoPlanillaForEdit.Concepto" placeholder="Código del Centro">
+    <input @bind="MovimientoPlanillaForEdit.Prioridad" placeholder="Código del Centro">
+    <select @bind="MovimientoPlanillaForEdit.TipoOperacion">
+        <option value="@MovimientoPlanillaForEdit.TipoOperacion">@MovimientoPlanillaForEdit.TipoOperacion</option>
+        <option value=" ">Sin</option>
+        @foreach (var item in movimientosPlanilla[0].TipoOperacionList)
         {
-            <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro</button>
+            <option value="@item.CodigoTipooperacion">@item.NombreOperacion</option>
         }
+    </select>
+    <input @bind="MovimientoPlanillaForEdit.Cuenta1" placeholder="Cuenta 1...">
+    <input @bind="MovimientoPlanillaForEdit.Cuenta2" placeholder="Cuenta 2...">
+    <input @bind="MovimientoPlanillaForEdit.Cuenta3" placeholder="Cuenta 3...">
+    <input @bind="MovimientoPlanillaForEdit.Cuenta4" placeholder="Cuenta 4...">
+    <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion1">
+        <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion1">@MovimientoPlanillaForEdit.MovimientoExcepcion1</option>
+        @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+        {
+            <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
+        }
+    </select>
+    <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion2">
+        <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion2">@MovimientoPlanillaForEdit.MovimientoExcepcion2</option>
+        @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+        {
+            <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
+        }
+    </select>
+    <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion3">
+        <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion3">@MovimientoPlanillaForEdit.MovimientoExcepcion3</option>
+        @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion3List)
+        {
+            <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
+        }
+    </select>
 
-        <br>
-        <br>
+    <input @bind="MovimientoPlanillaForEdit.Aplica_iess" placeholder="Aplica Iess..">
+    <input @bind="MovimientoPlanillaForEdit.Aplica_imp_renta" placeholder="Alplica Imp. Renta..">
+    <input @bind="MovimientoPlanillaForEdit.Aplica_imp_renta" placeholder="Empresa Afecta Iess...">
+    <br>
+    <button class="create-button" @onclick="(() => EditMovimiento())">Editar</button>
+    <br>
+    <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+}
+else
+{
+    <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro</button>
+}
 
-        <table class="centros-table">
-            <thead>
-                <tr>
-                    <th>Código Concepto</th>
-                    <th>Concepto</th>
-                    <th>Prioridad</th>
-                    <th>Tipo Operación</th>
-                    <th>Cuenta 1</th>
-                    <th>Cuenta 2</th>
-                    <th>Cuenta 3</th>
-                    <th>Cuenta 4</th>
-                    <th>Movimiento Exc. 1</th>
-                    <th>Movimiento Exc. 2</th>
-                    <th>Movimiento Exc. 3</th>
-                    <th>Aplica Iess</th>
-                    <th>Aplica Imp. Renta</th>
-                    <th>Empresa Afecta Iess</th>
-                    <th>Editar</th>
-                    <th>Borrar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var movimiento in movimientosPlanilla)
-                {
-                    <tr>
-                        <td>@movimiento.CodigoConcepto</td>
-                        <td>@movimiento.Concepto</td>
-                        <td>@movimiento.Prioridad</td>
-                        <td>@movimiento.TipoOperacion</td>
-                        <td>@movimiento.Cuenta1</td>
-                        <td>@movimiento.Cuenta2</td>
-                        <td>@movimiento.Cuenta3</td>
-                        <td>@movimiento.Cuenta4</td>
-                        <td>@movimiento.MovimientoExcepcion1</td>
-                        <td>@movimiento.MovimientoExcepcion2</td>
-                        <td>@movimiento.MovimientoExcepcion3</td>
-                        <td>@movimiento.Aplica_iess</td>
-                        <td>@movimiento.Aplica_imp_renta</td>
-                        <td>@movimiento.Empresa_Afecta_Iess</td>
-                        <td>
-                            <button class="edit-button" @onclick="(() => BtnEdit(movimiento))">Editar</button>
-                        </td>
-                        <td>
-                            <button class="delete-button" @onclick="(() => DeleteMovimiento(movimiento))">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </Authorized>
-</AuthorizeView>
+<br>
+<br>
+
+<table class="centros-table">
+    <thead>
+        <tr>
+            <th>Código Concepto</th>
+            <th>Concepto</th>
+            <th>Prioridad</th>
+            <th>Tipo Operación</th>
+            <th>Cuenta 1</th>
+            <th>Cuenta 2</th>
+            <th>Cuenta 3</th>
+            <th>Cuenta 4</th>
+            <th>Movimiento Exc. 1</th>
+            <th>Movimiento Exc. 2</th>
+            <th>Movimiento Exc. 3</th>
+            <th>Aplica Iess</th>
+            <th>Aplica Imp. Renta</th>
+            <th>Empresa Afecta Iess</th>
+            <th>Editar</th>
+            <th>Borrar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movimiento in movimientosPlanilla)
+        {
+            <tr>
+                <td>@movimiento.CodigoConcepto</td>
+                <td>@movimiento.Concepto</td>
+                <td>@movimiento.Prioridad</td>
+                <td>@movimiento.TipoOperacion</td>
+                <td>@movimiento.Cuenta1</td>
+                <td>@movimiento.Cuenta2</td>
+                <td>@movimiento.Cuenta3</td>
+                <td>@movimiento.Cuenta4</td>
+                <td>@movimiento.MovimientoExcepcion1</td>
+                <td>@movimiento.MovimientoExcepcion2</td>
+                <td>@movimiento.MovimientoExcepcion3</td>
+                <td>@movimiento.Aplica_iess</td>
+                <td>@movimiento.Aplica_imp_renta</td>
+                <td>@movimiento.Empresa_Afecta_Iess</td>
+                <td>
+                    <button class="edit-button" @onclick="(() => BtnEdit(movimiento))">Editar</button>
+                </td>
+                <td>
+                    <button class="delete-button" @onclick="(() => DeleteMovimiento(movimiento))">Borrar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
 
