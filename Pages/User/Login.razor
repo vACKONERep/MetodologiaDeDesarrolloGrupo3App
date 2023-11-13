@@ -29,7 +29,7 @@
                         <option value="0" selected>Seleccione una sucursal...</option>
                         @foreach (var item in emisores)
                         {
-                            <option value="@item.Codigo">@item.NombreEmisor</option>
+                            <option value="@item.Codigo">@(item.Codigo + ". ") @item.NombreEmisor</option>
                         }
                     </select>
 

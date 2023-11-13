@@ -5,212 +5,397 @@
 
 @inject NavigationManager NavManager
 @inject IToastService ToastService
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Movimiento Planilla</PageTitle>
 
-<PageTitle>Movimiento Planilla</PageTitle>
 
-
-<h2>Movimiento de Planilla</h2>
-<hr>
-<div class="search-container">
-    <input class="search-input" @bind="SearchInput" placeholder="Concepto del movimiento...">
-    <button class="search-button" @onclick="(() => Search())">Buscar</button>
-</div>
-<hr>
-@if (forCreate)
-{
-    <div class="form-row">
-        <div class="form-column">
-            <div class="form-group">
-                <label class="form-label" for="codigoPlanilla">Código Planilla</label>
-                <input class="form-control" id="codigoPlanilla" @bind="MovimientoPlanillaForCreate.CodigoConcepto" placeholder="Ingrese el código de la planilla">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="concepto">Concepto</label>
-                <input class="form-control" id="concepto" @bind="MovimientoPlanillaForCreate.Concepto" placeholder="Ingrese el concepto">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="prioridad">Prioridad</label>
-                <input class="form-control" id="prioridad" @bind="MovimientoPlanillaForCreate.Prioridad" placeholder="Ingrese la prioridad">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="tipoOperacion">Tipo de Operación</label>
-                <select class="form-control" id="tipoOperacion" @bind="MovimientoPlanillaForCreate.TipoOperacion">
-                    <!-- Opciones del select aquí -->
-                </select>
-            </div>
-
-            <div class="form-column">
-                <div class="form-group">
-                    <label class="form-label" for="aplicaIess">Aplica IESS</label>
-                    <input class="form-control" id="aplicaIess" @bind="MovimientoPlanillaForCreate.Aplica_iess" placeholder="Aplica IESS...">
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="aplicaImpRenta">Aplica Impuesto a la Renta</label>
-                    <input class="form-control" id="aplicaImpRenta" @bind="MovimientoPlanillaForCreate.Aplica_imp_renta" placeholder="Aplica Impuesto a la Renta...">
-                </div>
-            </div>
-            <div class="form-column">
-                <div class="form-group">
-                    <label class="form-label" for="empresaAfectaIess">Empresa Afecta IESS</label>
-                    <input class="form-control" id="empresaAfectaIess" @bind="MovimientoPlanillaForCreate.Aplica_imp_renta" placeholder="Empresa Afecta IESS...">
-                </div>
-            </div>
+        <h2>Movimiento de Planilla</h2>
+        <hr>
+        <div class="search-container">
+            <input class="search-input" @bind="SearchInput" placeholder="Concepto del movimiento...">
+            <button class="search-button" @onclick="(() => Search())">Buscar</button>
         </div>
-        <div class="form-column">
-            <div class="form-group">
-                <label class="form-label" for="cuenta1">Cuenta 1</label>
-                <input class="form-control" id="cuenta1" @bind="MovimientoPlanillaForCreate.Cuenta1" placeholder="Ingrese la cuenta 1">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="cuenta2">Cuenta 2</label>
-                <input class="form-control" id="cuenta2" @bind="MovimientoPlanillaForCreate.Cuenta2" placeholder="Ingrese la cuenta 2">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="cuenta3">Cuenta 3</label>
-                <input class="form-control" id="cuenta3" @bind="MovimientoPlanillaForCreate.Cuenta3" placeholder="Ingrese la cuenta 3">
-            </div>
-            <div class="form-group">
-                <label class="form-label" for="cuenta4">Cuenta 4</label>
-                <input class="form-control" id="cuenta4" @bind="MovimientoPlanillaForCreate.Cuenta4" placeholder="Ingrese la cuenta 4">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="movExcepcion3">Movimiento Excepción 1</label>
-                <select class="form-control" id="movExcepcion1" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion1">
-
-                </select>
-
-                <label class="form-label" for="movExcepcion3">Movimiento Excepción 2</label>
-                <select class="form-control" id="movExcepcion2" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion2">
-
-                </select>
-
-                <label class="form-label" for="movExcepcion3">Movimiento Excepción 3</label>
-                <select class="form-control" id="movExcepcion3" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion3">
-
-                </select>
-            </div>
-        </div>
-    </div>
-    <button class="create-button" @onclick="(() => CreateMovimiento())">Crear</button>
-    <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
-}
-else if (forEdit)
-{
-    <input @bind="MovimientoPlanillaForEdit.CodigoConcepto" placeholder="Código Planilla">
-    <input @bind="MovimientoPlanillaForEdit.Concepto" placeholder="Código del Centro">
-    <input @bind="MovimientoPlanillaForEdit.Prioridad" placeholder="Código del Centro">
-    <select @bind="MovimientoPlanillaForEdit.TipoOperacion">
-        <option value="@MovimientoPlanillaForEdit.TipoOperacion">@MovimientoPlanillaForEdit.TipoOperacion</option>
-        <option value=" ">Sin</option>
-        @foreach (var item in movimientosPlanilla[0].TipoOperacionList)
+        <hr>
+        @if (forCreate)
         {
-            <option value="@item.CodigoTipooperacion">@item.NombreOperacion</option>
-        }
-    </select>
-    <input @bind="MovimientoPlanillaForEdit.Cuenta1" placeholder="Cuenta 1...">
-    <input @bind="MovimientoPlanillaForEdit.Cuenta2" placeholder="Cuenta 2...">
-    <input @bind="MovimientoPlanillaForEdit.Cuenta3" placeholder="Cuenta 3...">
-    <input @bind="MovimientoPlanillaForEdit.Cuenta4" placeholder="Cuenta 4...">
-    <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion1">
-        <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion1">@MovimientoPlanillaForEdit.MovimientoExcepcion1</option>
-        @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
-        {
-            <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
-        }
-    </select>
-    <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion2">
-        <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion2">@MovimientoPlanillaForEdit.MovimientoExcepcion2</option>
-        @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
-        {
-            <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
-        }
-    </select>
-    <select @bind="MovimientoPlanillaForEdit.MovimientoExcepcion3">
-        <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion3">@MovimientoPlanillaForEdit.MovimientoExcepcion3</option>
-        @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion3List)
-        {
-            <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce</option>
-        }
-    </select>
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="codigoPlanillaCreate">Código Planilla</label>
+                        <input disabled class="form-control" type="number" id="codigoPlanillaCreate" value="@(movimientosPlanilla.Last().CodigoConcepto +1)" placeholder="Ingrese el código de la planilla">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="conceptoCreate">Concepto</label>
+                        <input class="form-control" id="conceptoCreate" @bind="MovimientoPlanillaForCreate.Concepto" placeholder="Ingrese el concepto">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prioridadCreate">Prioridad</label>
+                        <input class="form-control" type="number" id="prioridadCreate" @bind="MovimientoPlanillaForCreate.Prioridad" placeholder="Ingrese la prioridad">
+                    </div>
 
-    <input @bind="MovimientoPlanillaForEdit.Aplica_iess" placeholder="Aplica Iess..">
-    <input @bind="MovimientoPlanillaForEdit.Aplica_imp_renta" placeholder="Alplica Imp. Renta..">
-    <input @bind="MovimientoPlanillaForEdit.Aplica_imp_renta" placeholder="Empresa Afecta Iess...">
-    <br>
-    <button class="create-button" @onclick="(() => EditMovimiento())">Editar</button>
-    <br>
-    <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
-}
-else
-{
-    <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro</button>
-}
+                    <div class="form-group">
+                        <label class="form-label" for="tipoOperacionCreate">Tipo de Operación</label>
+                        <select class="form-control" id="tipoOperacionCreate" @bind="MovimientoPlanillaForCreate.TipoOperacion">
+                            @if (MovimientoPlanillaForCreate.Aplica_iess == null)
+                            {
+                                <option value="@(" ")" selected>Seleccione una opción...</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].TipoOperacionList)
+                            {
+                                <option value="@item.NombreOperacion">@item.CodigoTipooperacion @(". ") @item.NombreOperacion</option>
+                            }
+                        </select>
+                    </div>
 
-<br>
-<br>
+                    <div class="form-group">
+                        <label class="form-label" for="aplicaIessCreate">Aplica Iess</label>
+                        <select class="form-control" id="aplicaIessCreate" @bind="MovimientoPlanillaForCreate.Aplica_iess">
+                            @if (MovimientoPlanillaForCreate.Aplica_iess == null)
+                            {
+                                <option value="@(" ")" selected>Seleccione una opción...</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].TrabajoAfectaIessList)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
 
-<table class="centros-table">
-    <thead>
-        <tr>
-            <th>Código Concepto</th>
-            <th>Concepto</th>
-            <th>Prioridad</th>
-            <th>Tipo Operación</th>
-            <th>Cuenta 1</th>
-            <th>Cuenta 2</th>
-            <th>Cuenta 3</th>
-            <th>Cuenta 4</th>
-            <th>Movimiento Exc. 1</th>
-            <th>Movimiento Exc. 2</th>
-            <th>Movimiento Exc. 3</th>
-            <th>Aplica Iess</th>
-            <th>Aplica Imp. Renta</th>
-            <th>Empresa Afecta Iess</th>
-            <th>Editar</th>
-            <th>Borrar</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var movimiento in movimientosPlanilla)
-        {
-            <tr>
-                <td>@movimiento.CodigoConcepto</td>
-                <td>@movimiento.Concepto</td>
-                <td>@movimiento.Prioridad</td>
-                <td>@movimiento.TipoOperacion</td>
-                <td>@movimiento.Cuenta1</td>
-                <td>@movimiento.Cuenta2</td>
-                <td>@movimiento.Cuenta3</td>
-                <td>@movimiento.Cuenta4</td>
-                <td>@movimiento.MovimientoExcepcion1</td>
-                <td>@movimiento.MovimientoExcepcion2</td>
-                <td>@movimiento.MovimientoExcepcion3</td>
-                <td>@movimiento.Aplica_iess</td>
-                <td>@movimiento.Aplica_imp_renta</td>
-                <td>@movimiento.Empresa_Afecta_Iess</td>
-                <td>
-                    <button class="edit-button" @onclick="(() => BtnEdit(movimiento))">Editar</button>
-                </td>
-                <td>
-                    <button class="delete-button" @onclick="(() => DeleteMovimiento(movimiento))">Borrar</button>
-                </td>
-            </tr>
+                    <div class="form-group">
+                        <label class="form-label" for="aplicaImpRentaCreate">Aplica Impuesto a la Renta</label>
+                        <select class="form-control" id="aplicaImpRentaCreate" @bind="MovimientoPlanillaForCreate.Aplica_imp_renta">
+                            @if (MovimientoPlanillaForCreate.Aplica_imp_renta == null)
+                            {
+                                <option value="@(" ")" selected>Seleccione una opción...</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].TrabAfecImpuestoRentaList)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="empresaAfectaIessCreate">Empresa Afecta IESS</label>
+                        <select class="form-control" id="empresaAfectaIessCreate" @bind="MovimientoPlanillaForCreate.Empresa_Afecta_Iess">
+                            @if (MovimientoPlanillaForCreate.Empresa_Afecta_Iess == null)
+                            {
+                                <option value="@(" ")" selected>Seleccione una opción...</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].TrabajoAfectaIessList)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta1Create">Cuenta 1</label>
+                        <input class="form-control" id="cuenta1" @bind="MovimientoPlanillaForCreate.Cuenta1" placeholder="Ingrese la cuenta 1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta2Create">Cuenta 2</label>
+                        <input class="form-control" id="cuenta2Create" @bind="MovimientoPlanillaForCreate.Cuenta2" placeholder="Ingrese la cuenta 2">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta3Create">Cuenta 3</label>
+                        <input class="form-control" id="cuenta3Create" @bind="MovimientoPlanillaForCreate.Cuenta3" placeholder="Ingrese la cuenta 3">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta4Create">Cuenta 4</label>
+                        <input class="form-control" id="cuenta4Create" @bind="MovimientoPlanillaForCreate.Cuenta4" placeholder="Ingrese la cuenta 4">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="movExcepcion1Create">Movimiento Excepción 1</label>
+                        <select class="form-control" id="movExcepcion1Create" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion1">
+                            @if (MovimientoPlanillaForCreate.MovimientoExcepcion1 == null)
+                            {
+                                <option value="@(" ")" selected>Seleccione una opción...</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+
+                        <label class="form-label" for="movExcepcion2Create">Movimiento Excepción 2</label>
+                        <select class="form-control" id="movExcepcion2Create" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion2">
+                            @if (MovimientoPlanillaForCreate.MovimientoExcepcion2 == null)
+                            {
+                                <option value="@(" ")" selected>Seleccione una opción...</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+
+                        <label class="form-label" for="movExcepcion3Create">Movimiento Excepción 3</label>
+                        <select class="form-control" id="movExcepcion3Create" @bind="MovimientoPlanillaForCreate.MovimientoExcepcion3">
+                            @if (MovimientoPlanillaForCreate.MovimientoExcepcion3 == null)
+                            {
+                                <option value="@(" ")" selected>Seleccione una opción...</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion3List)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button class="create-button" @onclick="(() => CreateMovimiento())">Crear</button>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
         }
-    </tbody>
-</table>
+        else if (forEdit)
+        {
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="codigoPlanillaEdit">Código Planilla</label>
+                        <input class="form-control" type="number" @bind="MovimientoPlanillaForEdit.CodigoConcepto" placeholder="Código Planilla">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="conceptoEdit">Concepto</label>
+                        <input class="form-control" @bind="MovimientoPlanillaForEdit.Concepto" id="conceptoEdit" placeholder="Código del Centro">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="prioridadEdit">Prioridad</label>
+                        <input class="form-control" type="number" id="prioridadEdit" @bind="MovimientoPlanillaForEdit.Prioridad" placeholder="Ingrese la prioridad">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="tipoOperacionEdit">Tipo de Operación</label>
+                        <select class="form-control" @bind="MovimientoPlanillaForEdit.TipoOperacion" id="tipoOperacionEdit">
+                            <option value="@MovimientoPlanillaForEdit.TipoOperacion">@MovimientoPlanillaForEdit.TipoOperacion</option>
+                            @foreach (var item in movimientosPlanilla[0].TipoOperacionList)
+                            {
+                                <option value="@item.NombreOperacion">@item.CodigoTipooperacion @(". ") @item.NombreOperacion</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="aplicaIessEdit">Aplica Iess</label>
+                        <select class="form-control" id="aplicaIessEdit" @bind="MovimientoPlanillaForEdit.Aplica_iess">
+                            @if (MovimientoPlanillaForEdit.Aplica_iess == " ")
+                            {
+                                <option value="@(" ")" selected>Sin especif.</option>
+                            }
+                            else
+                            {
+                                <option value="@MovimientoPlanillaForEdit.Aplica_iess">@MovimientoPlanillaForEdit.Aplica_iess</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].TrabajoAfectaIessList)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="aplicaImpRentaEdit">Aplica Impuesto a la Renta</label>
+                        <select class="form-control" id="aplicaImpRentaEdit" @bind="MovimientoPlanillaForEdit.Aplica_imp_renta">
+                            @if (MovimientoPlanillaForEdit.Aplica_imp_renta == " ")
+                            {
+                                <option value="@(" ")" selected>Sin especif.</option>
+                            }
+                            else
+                            {
+                                <option value="@MovimientoPlanillaForEdit.Aplica_imp_renta">@MovimientoPlanillaForEdit.Aplica_imp_renta</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].TrabAfecImpuestoRentaList)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="empresaAfectaIessEdit">Empresa Afecta IESS</label>
+                        <select class="form-control" id="empresaAfectaIessEdit" @bind="MovimientoPlanillaForEdit.Empresa_Afecta_Iess">
+                            @if (MovimientoPlanillaForEdit.Aplica_iess == " ")
+                            {
+                                <option value="@(" ")" selected>Sin especif.</option>
+                            }
+                            else
+                            {
+                                <option value="@MovimientoPlanillaForEdit.Empresa_Afecta_Iess">@MovimientoPlanillaForEdit.Empresa_Afecta_Iess</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].TrabajoAfectaIessList)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta1Edit">Cuenta 1</label>
+                        <input class="form-control" id="cuenta1Edit" @bind="MovimientoPlanillaForEdit.Cuenta1" placeholder="Ingrese la cuenta 1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta2Edit">Cuenta 2</label>
+                        <input class="form-control" id="cuenta2Edit" @bind="MovimientoPlanillaForEdit.Cuenta2" placeholder="Ingrese la cuenta 2">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta3Edit">Cuenta 3</label>
+                        <input class="form-control" id="cuenta3Edit" @bind="MovimientoPlanillaForEdit.Cuenta3" placeholder="Ingrese la cuenta 3">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cuenta4Edit">Cuenta 4</label>
+                        <input class="form-control" id="cuenta4Edit" @bind="MovimientoPlanillaForEdit.Cuenta4" placeholder="Ingrese la cuenta 4">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="movExcepcion1Edit">Movimiento Excepción 1</label>
+                        <select class="form-control" id="movExcepcion1Edit" @bind="MovimientoPlanillaForEdit.MovimientoExcepcion1">
+                            <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion1">@MovimientoPlanillaForEdit.MovimientoExcepcion1</option>
+                            @if (MovimientoPlanillaForEdit.MovimientoExcepcion1 == " ")
+                            {
+                                <option value="@(" ")" selected>Sin Excep.</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="movExcepcion2Edit">Movimiento Excepción 2</label>
+                        <select class="form-control" id="movExcepcion2Edit" @bind="MovimientoPlanillaForEdit.MovimientoExcepcion2">
+                            <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion2">@MovimientoPlanillaForEdit.MovimientoExcepcion2</option>
+                            @if (MovimientoPlanillaForEdit.MovimientoExcepcion2 == " ")
+                            {
+                                <option value="@(" ")" selected>Sin Excep.</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion1y2List)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="movExcepcion3Edit">Movimiento Excepción 3</label>
+                        <select class="form-control" id="movExcepcion3Edit" @bind="MovimientoPlanillaForEdit.MovimientoExcepcion3">
+                            <option value="@MovimientoPlanillaForEdit.MovimientoExcepcion3">@MovimientoPlanillaForEdit.MovimientoExcepcion3</option>
+                            @if (MovimientoPlanillaForEdit.MovimientoExcepcion3 == " ")
+                            {
+                                <option value="@(" ")" selected>Sin Excep.</option>
+                            }
+                            @foreach (var item in movimientosPlanilla[0].MovimientosExcepcion3List)
+                            {
+                                <option value="@item.DesripMovimientoExce">@item.DesripMovimientoExce @(". ") @item.CodigoMovimientoExce</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="create-button" @onclick="(() => EditMovimiento())">Editar</button>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else if (isDelete)
+        {
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="codigoPlanillaDelete">Código Planilla</label>
+                        <input class="form-control" type="number" id="codigoPlanillaDelete" @bind="MovimientoPlanillaToDelete.CodigoConcepto" placeholder="Ingrese el código de la planilla">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="conceptoDelete">Concepto</label>
+                        <input class="form-control" id="conceptoDelete" @bind="MovimientoPlanillaToDelete.Concepto" placeholder="Ingrese el concepto">
+                    </div>
+                </div>
+            </div>
+            <button class="create-button" @onclick="(() => DeleteMovimiento(MovimientoPlanillaToDelete))">Borrar</button>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else
+        {
+            <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro...</button>
+            <button class="delete-button" @onclick="(() => BtnDelete())">Borrar un registro...</button>
+        }
+
+        <br>
+        <br>
+
+        <table class="centros-table">
+            <thead>
+                <tr>
+                    <th>Código Concepto</th>
+                    <th>Concepto</th>
+                    <th>Prioridad</th>
+                    <th>Tipo Operación</th>
+                    <th>Cuenta 1</th>
+                    <th>Cuenta 2</th>
+                    <th>Cuenta 3</th>
+                    <th>Cuenta 4</th>
+                    <th>Movimiento Exc. 1</th>
+                    <th>Movimiento Exc. 2</th>
+                    <th>Movimiento Exc. 3</th>
+                    <th>Aplica Iess</th>
+                    <th>Aplica Imp. Renta</th>
+                    <th>Empresa Afecta Iess</th>
+                    <th>Editar</th>
+                    <th>Borrar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movimiento in movimientosPlanilla)
+                {
+                    <tr>
+                        <td>@movimiento.CodigoConcepto</td>
+                        <td>@movimiento.Concepto</td>
+                        <td>@movimiento.Prioridad</td>
+                        <td>@movimiento.TipoOperacion</td>
+                        <td>@movimiento.Cuenta1</td>
+                        <td>@movimiento.Cuenta2</td>
+                        <td>@movimiento.Cuenta3</td>
+                        <td>@movimiento.Cuenta4</td>
+                        <td>@movimiento.MovimientoExcepcion1API</td>
+                        <td>@movimiento.MovimientoExcepcion2API</td>
+                        <td>@movimiento.MovimientoExcepcion3API</td>
+                        <td>@movimiento.Aplica_iessAPI</td>
+                        <td>@movimiento.Aplica_imp_rentaAPI</td>
+                        <td>@movimiento.Empresa_Afecta_IessAPI</td>
+                        <td>
+                            <button class="edit-button" @onclick="(() => BtnEdit(movimiento))">Editar</button>
+                        </td>
+                        <td>
+                            <button class="delete-button" @onclick="(() => DeleteMovimiento(movimiento))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Authorized>
+</AuthorizeView>
+
+
 
 @code {
 
     #region Movimientos properties Vars n Props
     public bool forCreate { get; set; }
     public bool forEdit { get; set; }
+    public bool isDelete { get; set; }
 
     public string SearchInput { get; set; }
 
     public MovimientoPlanilla MovimientoPlanillaForCreate { get; set; }
     public MovimientoPlanilla MovimientoPlanillaForEdit { get; set; }
+    public MovimientoPlanilla MovimientoPlanillaToDelete { get; set; }
     public List<MovimientoPlanilla> movimientosPlanilla = new List<MovimientoPlanilla>();
     public MovimientoPlanillaController movimientoPlanillaController = new MovimientoPlanillaController();
     #endregion
@@ -221,6 +406,7 @@ else
     {
         forEdit = false;
         forCreate = false;
+        isDelete = false;
         movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
     }
 
@@ -240,6 +426,7 @@ else
     {
         forEdit = false;
         forCreate = true;
+        isDelete = false;
         MovimientoPlanillaForCreate = new MovimientoPlanilla();
     }
 
@@ -247,6 +434,14 @@ else
     {
         forCreate = false;
         forEdit = false;
+        isDelete = false;
+    }
+    private async Task BtnDelete()
+    {
+        forCreate = false;
+        forEdit = false;
+        isDelete = true;
+        MovimientoPlanillaToDelete = new MovimientoPlanilla();
     }
 
     private async Task CreateMovimiento()
@@ -256,6 +451,7 @@ else
             ToastService.ShowSuccess("Se ha creado el movimiento");
             forCreate = false;
             forEdit = false;
+            isDelete = false;
             movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
         }
         else
@@ -268,11 +464,55 @@ else
     {
         forCreate = false;
         forEdit = true;
+        isDelete = false;
         MovimientoPlanillaForEdit = movimiento;
     }
 
     private async Task EditMovimiento()
     {
+        MovimientoPlanillaForEdit.TipoOperacion += "s";
+
+        if (MovimientoPlanillaForEdit.MovimientoExcepcion1 == "Horas Mov Planilla")
+            MovimientoPlanillaForEdit.MovimientoExcepcion1 = "H";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion1 == "Si Movimiento Planilla")
+            MovimientoPlanillaForEdit.MovimientoExcepcion1 = "M";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion1 == "Cuenta Corriente")
+            MovimientoPlanillaForEdit.MovimientoExcepcion1 = "C";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion1 == " ")
+            MovimientoPlanillaForEdit.MovimientoExcepcion1 = null;
+
+        if (MovimientoPlanillaForEdit.MovimientoExcepcion2 == "Horas Mov Planilla")
+            MovimientoPlanillaForEdit.MovimientoExcepcion2 = "H";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion2 == "Si Movimiento Planilla")
+            MovimientoPlanillaForEdit.MovimientoExcepcion2 = "M";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion2 == "Cuenta Corriente")
+            MovimientoPlanillaForEdit.MovimientoExcepcion2 = "C";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion2 == " ")
+            MovimientoPlanillaForEdit.MovimientoExcepcion2 = null;
+
+        if (MovimientoPlanillaForEdit.MovimientoExcepcion3 == "Costa")
+            MovimientoPlanillaForEdit.MovimientoExcepcion3 = "C";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion3 == "Sierra")
+            MovimientoPlanillaForEdit.MovimientoExcepcion3 = "S";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion3 == "No Procesar")
+            MovimientoPlanillaForEdit.MovimientoExcepcion3 = "X";
+        else if (MovimientoPlanillaForEdit.MovimientoExcepcion3 == "No Aplica")
+            MovimientoPlanillaForEdit.MovimientoExcepcion3 = "N";
+
+        if (MovimientoPlanillaForEdit.Aplica_iess == "No Aplica")
+            MovimientoPlanillaForEdit.Aplica_iess = "0";
+        else if (MovimientoPlanillaForEdit.Aplica_iess == "Si Aplica")
+            MovimientoPlanillaForEdit.Aplica_iess = "1";
+
+        if (MovimientoPlanillaForEdit.Aplica_imp_renta == "No Aplica")
+            MovimientoPlanillaForEdit.Aplica_imp_renta = "0";
+        else if (MovimientoPlanillaForEdit.Aplica_imp_renta == "Si Aplica")
+            MovimientoPlanillaForEdit.Aplica_imp_renta = "1";
+
+        if (MovimientoPlanillaForEdit.Empresa_Afecta_Iess == "No Aplica")
+            MovimientoPlanillaForEdit.Empresa_Afecta_Iess = "0";
+        else if (MovimientoPlanillaForEdit.Empresa_Afecta_Iess == "Si Aplica")
+            MovimientoPlanillaForEdit.Empresa_Afecta_Iess = "1";
 
         if (await movimientoPlanillaController.UpdateMovimientoPlanilla(MovimientoPlanillaForEdit))
         {
@@ -284,19 +524,33 @@ else
             ToastService.ShowWarning("No se ha podido actualizar el movimiento planilla");
         }
         forEdit = false;
+        forCreate = false;
+        isDelete = false;
     }
 
     private async Task DeleteMovimiento(MovimientoPlanilla movimiento)
     {
-        if (await movimientoPlanillaController.DeleteMovimientoPlanilla(movimiento))
+        string response = await movimientoPlanillaController.DeleteMovimientoPlanilla(movimiento);
+
+        if (response == "Eliminación Exitosa")
         {
             movimientosPlanilla = await movimientoPlanillaController.GetMovimientosPlantilla();
-            ToastService.ShowSuccess("Se ha borrado el movimiento planilla");
+            ToastService.ShowSuccess("Se ha borrado con exito");
+        }
+        else if (response == "El registro que desea ingresar No existe")
+        {
+            ToastService.ShowWarning("El registro no existe");
         }
         else
         {
-            ToastService.ShowWarning("No se ha podido borrar el centro de costos");
+            ToastService.ShowError("Ha ourrido un error en el servidor");
         }
+
+        forEdit = false;
+        forCreate = false;
+        isDelete = false;
+
+        StateHasChanged();
     }
     #endregion
 }

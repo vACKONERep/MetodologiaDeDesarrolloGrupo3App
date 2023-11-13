@@ -31,13 +31,13 @@ namespace MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla
         }
 
         [JsonProperty("CodigoConcepto")]
-        public int CodigoConcepto { get; set; }
+        public int? CodigoConcepto { get; set; }
 
         [JsonProperty("Concepto")]
         public string Concepto { get; set; }
 
         [JsonProperty("Prioridad")]
-        public int Prioridad { get; set; }
+        public int? Prioridad { get; set; }
 
         [JsonProperty("TipoOperacion")]
         public string TipoOperacion { get; set; }
@@ -77,6 +77,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla
 
         [JsonProperty("Empresa_Afecta_Iess")]
         public string Empresa_Afecta_Iess { get; set; }
+        public string Empresa_Afecta_IessAPI { get; set; }
 
         [JsonProperty("Mensaje")]
         public string Mensaje { get; set; }
@@ -84,6 +85,8 @@ namespace MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla
         public List<TipoOperacion> TipoOperacionList { get; set; }
         public List<MovimientosExcepcion1y2> MovimientosExcepcion1y2List { get; set; }
         public List<MovimientosExcepcion3> MovimientosExcepcion3List { get; set; }
+        public List<TrabaAfectaIESS> TrabajoAfectaIessList { get; set; }
+        public List<TrabAfecImpuestoRenta> TrabAfecImpuestoRentaList { get; set; }
 
     }
 }

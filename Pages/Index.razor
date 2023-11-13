@@ -1,5 +1,8 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
-
-<MetodologiaDeDesarrolloGrupo3App.Pages.Trabajador.TrabajadorIndex></MetodologiaDeDesarrolloGrupo3App.Pages.Trabajador.TrabajadorIndex>
+<AuthorizeView>
+    <NotAuthorized>
+        <PageTitle>Index</PageTitle>
+        <MetodologiaDeDesarrolloGrupo3App.Pages.Trabajador.TrabajadorIndex></MetodologiaDeDesarrolloGrupo3App.Pages.Trabajador.TrabajadorIndex>
+    </NotAuthorized>
+</AuthorizeView>
