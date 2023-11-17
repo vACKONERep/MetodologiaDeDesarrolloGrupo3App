@@ -17,7 +17,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
             httpClient.BaseAddress = new Uri("http://apiservicios.ecuasolmovsa.com:3009/api/");
         }
 
-        public async Task<List<GestionCuentaContableNomina>> GetNomina(string sucursal)
+        public async Task<List<GestionCuentaContableNomina>> GetNomina(int sucursal)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
             }
         }
 
-        public async Task<List<GestionCuentaContableNomina>> GetNominaByName(GestionCuentaContableNomina nominaToSearch)
+        public async Task<List<GestionCuentaContableNomina>> GetNominaByName(string nominaToSearch)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
         {
             try
             {
-                HttpResponseMessage httpResponse = await httpClient.PostAsync($"Varios/", null);
+                HttpResponseMessage httpResponse = await httpClient.PostAsync($"Varios/GestionContableNominaInsert?Sucursal={nominaToCreate.Sucursal}&CodigoConceptoNomina={nominaToCreate.CodigoConceptoNomina}&CodigoCategoOcupacional={nominaToCreate.CodigoCategoriaocupacional}&CodigoOperacion={nominaToCreate.CodigoOperacion}&CodigoCuenta={nominaToCreate.CodigoCuentaContable}&CodigoTipocuenta={nominaToCreate.CodigoTipoCuenta}", null);
 
                 if (httpResponse.IsSuccessStatusCode)
                     return true;
@@ -87,7 +87,7 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
         {
             try
             {
-                HttpResponseMessage httpResponse = await httpClient.GetAsync($"Varios/");
+                HttpResponseMessage httpResponse = await httpClient.PostAsync($"Varios/GestionContableNominaDelete?Sucursal={nominaToDelete.Sucursal}&CodigoConceptoNomina={nominaToDelete.CodigoConceptoNomina}&CodigoCategoOcupacional={nominaToDelete.CodigoCategoriaocupacional}&CodigoOperacion={nominaToDelete.CodigoOperacion}&CodigoCuenta={nominaToDelete.CodigoCuentaContable}&CodigoTipocuenta={nominaToDelete.CodigoTipoCuenta}", null);
 
                 string content = await httpResponse.Content.ReadAsStringAsync();
 

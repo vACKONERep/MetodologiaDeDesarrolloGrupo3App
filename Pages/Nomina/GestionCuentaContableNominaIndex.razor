@@ -1,13 +1,310 @@
 ﻿@page "/GestionCuentaContableNominaIndex"
 
+@using MetodologiaDeDesarrolloGrupo3App.Authentication;
 @using MetodologiaDeDesarrolloGrupo3App.Controllers;
-@using MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla
+@using MetodologiaDeDesarrolloGrupo3App.Models.Nomina
+@using System.Security.Claims;
 
 @inject NavigationManager NavManager
 @inject IToastService ToastService
 
-<h2>Aqui hagale el CRUD mi washo como le hice con la otra, ya tiene el controlador y en el @@code solo llamas al controllador y tienes que completale al controlador. Ahi basate en lo que hice en movimiento Planilla que esta pepa. Si tiene search pondrasle la barrita de buscar y eso nomás </h2>
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<AuthorizeView>
+    <Authorized>
+        <PageTitle>Nomina</PageTitle>
+
+
+        <h2>Gestion Cuenta Contable Nomina</h2>
+
+        @if (forCreate)
+        {
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="Sucursal">Sucursal</label>
+                        <input class="form-control" type="number" id="Sucursal" @bind="GestionCuentaContableNominaForCreate.Sucursal" placeholder="Ingrese la sucursal">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codConceptNomina">Código Concepto Nomina</label>
+                        <input class="form-control" type="number" id="codConceptNomina" @bind="GestionCuentaContableNominaForCreate.CodigoConceptoNomina" placeholder="Ingrese el codigo del concepto">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codCatOcu">Cod. Cat. Oupacional</label>
+                        <input class="form-control" type="number" id="codCatOcu" @bind="GestionCuentaContableNominaForCreate.CodigoCategoriaocupacional" placeholder="Ingrese el codigo de la categria ocupacional">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="codOp">Codigo Oopecación</label>
+                        <input class="form-control" id="codOp" @bind="GestionCuentaContableNominaForCreate.CodigoOperacion" placeholder="Ingrese código del tipo de operación">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codCueCont">Codigo cuenta contable</label>
+                        <input class="form-control" id="codCueCont" @bind="GestionCuentaContableNominaForCreate.CodigoCuentaContable" placeholder="Ingrese el código de la cuenta contable">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codTipCue">Codigo tipo cuenta</label>
+                        <input class="form-control" id="codTipCue" @bind="GestionCuentaContableNominaForCreate.CodigoTipoCuenta" placeholder="Ingrese el codigo del tipo de cuenta">
+                    </div>
+                </div>
+            </div>
+            <button class="create-button" @onclick="(() => CreateNomina())">Crear</button>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else if (forEdit)
+        {
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="Sucursal">Sucursal</label>
+                        <input disabled class="form-control" type="number" id="Sucursal" @bind="GestionCuentaContableNominaForEdit.Sucursal" placeholder="Ingrese la sucursal">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codConceptNomina">Código Concepto Nomina</label>
+                        <input class="form-control" type="number" id="codConceptNomina" @bind="GestionCuentaContableNominaForEdit.CodigoConceptoNomina" placeholder="Ingrese el codigo del concepto">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codCatOcu">Cod. Cat. Oupacional</label>
+                        <input class="form-control" type="number" id="codCatOcu" @bind="GestionCuentaContableNominaForEdit.CodigoCategoriaocupacional" placeholder="Ingrese el codigo de la categria ocupacional">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="codOp">Codigo Oopecación</label>
+                        <input class="form-control" id="codOp" @bind="GestionCuentaContableNominaForEdit.CodigoOperacion" placeholder="Ingrese código del tipo de operación">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codCueCont">Codigo cuenta contable</label>
+                        <input class="form-control" id="codCueCont" @bind="GestionCuentaContableNominaForEdit.CodigoCuentaContable" placeholder="Ingrese el código de la cuenta contable">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codTipCue">Codigo tipo cuenta</label>
+                        <input class="form-control" id="codTipCue" @bind="GestionCuentaContableNominaForEdit.CodigoTipoCuenta" placeholder="Ingrese el codigo del tipo de cuenta">
+                    </div>
+                </div>
+            </div>
+
+            <button class="create-button" @onclick="(() => EditNomina())">Editar</button>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else if (isDelete)
+        {
+            <div class="form-row">
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="Sucursal">Sucursal</label>
+                        <input class="form-control" type="number" id="Sucursal" @bind="GestionCuentaContableNominaToDelete.Sucursal" placeholder="Ingrese la sucursal">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codConceptNomina">Código Concepto Nomina</label>
+                        <input class="form-control" type="number" id="codConceptNomina" @bind="GestionCuentaContableNominaToDelete.CodigoConceptoNomina" placeholder="Ingrese el codigo del concepto">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codCatOcu">Cod. Cat. Oupacional</label>
+                        <input class="form-control" type="number" id="codCatOcu" @bind="GestionCuentaContableNominaToDelete.CodigoCategoriaocupacional" placeholder="Ingrese el codigo de la categria ocupacional">
+                    </div>
+                </div>
+                <div class="form-column">
+                    <div class="form-group">
+                        <label class="form-label" for="codOp">Codigo Oopecación</label>
+                        <input class="form-control" id="codOp" @bind="GestionCuentaContableNominaToDelete.CodigoOperacion" placeholder="Ingrese código del tipo de operación">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codCueCont">Codigo cuenta contable</label>
+                        <input class="form-control" id="codCueCont" @bind="GestionCuentaContableNominaToDelete.CodigoCuentaContable" placeholder="Ingrese el código de la cuenta contable">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="codTipCue">Codigo tipo cuenta</label>
+                        <input class="form-control" id="codTipCue" @bind="GestionCuentaContableNominaToDelete.CodigoTipoCuenta" placeholder="Ingrese el codigo del tipo de cuenta">
+                    </div>
+                </div>
+            </div>
+            <button class="create-button" @onclick="(() => DeleteNomina(GestionCuentaContableNominaToDelete))">Borrar</button>
+            <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+        }
+        else
+        {
+            <button class="create-button" @onclick="(() => BtnCreate())">Crear nueva cuenta contable...</button>
+            <button class="delete-button" @onclick="(() => BtnDelete())">Borrar un registro...</button>
+        }
+
+        <table class="centros-table">
+            <thead>
+                <tr>
+                    <th>Sucursal</th>
+                    <th>Cod. Concepto Nómina</th>
+                    <th>Descripción concepto</th>
+                    <th>Cod. Cat. Ocupacional</th>
+                    <th>Desc. Cateogria</th>
+                    <th>Cod. Operacion</th>
+                    <th>Cod. Cuenta Contable</th>
+                    <th>Cod. Tipo Cuenta</th>
+                    <th>Desc. Cuenta</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cuentaContable in cuentasContablesNomina)
+                {
+                    <tr>
+                        <td>@cuentaContable.Sucursal</td>
+                        <td>@cuentaContable.CodigoConceptoNomina</td>
+                        <td>@cuentaContable.DescripcionConcepto</td>
+                        <td>@cuentaContable.CodigoCategoriaocupacional</td>
+                        <td>@cuentaContable.DescripcionCategoria</td>
+                        <td>@cuentaContable.CodigoOperacion</td>
+                        <td>@cuentaContable.CodigoCuentaContable.ToString()</td>
+                        <td>@cuentaContable.CodigoTipoCuenta</td>
+                        <td>@cuentaContable.DescripcionCuenta</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Authorized>
+</AuthorizeView>
 
 @code {
 
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private ClaimsPrincipal AuthenticationStateUser { get; set; }
+    private ClaimsPrincipal AuthenticationStateProviderUser { get; set; }
+
+    #region Gestión Nomina properties Vars n Props
+
+    public bool forCreate { get; set; }
+    public bool forEdit { get; set; }
+    public bool isDelete { get; set; }
+
+    public string SearchInput { get; set; }
+
+    public GestionCuentaContableNomina GestionCuentaContableNominaForCreate { get; set; }
+    public GestionCuentaContableNomina GestionCuentaContableNominaForEdit { get; set; }
+    public GestionCuentaContableNomina GestionCuentaContableNominaToDelete { get; set; }
+    public List<GestionCuentaContableNomina> cuentasContablesNomina = new List<GestionCuentaContableNomina>();
+    public NominaController cuentaContableNominaController = new NominaController();
+
+    public int codeEmisor { get; set; }
+    #endregion
+
+    #region Events
+
+    protected override async Task OnInitializedAsync()
+    {
+        cuentasContablesNomina = await cuentaContableNominaController.GetNomina(codeEmisor);
+
+        AuthenticationState authenticationState;
+
+        authenticationState = await authenticationStateTask;
+        this.AuthenticationStateUser = authenticationState.User;
+
+        var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthenticationStateProvider;
+        authenticationState = await customAuthStateProvider.GetAuthenticationStateAsync();
+        this.AuthenticationStateProviderUser = authenticationState.User;
+
+        var authState = authenticationState;
+
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            var codigoEmisor = authState.User.FindFirst(c => c.Type == ClaimTypes.GroupSid)?.Value;
+
+            codeEmisor = int.Parse(codigoEmisor);
+
+            cuentasContablesNomina = await cuentaContableNominaController.GetNomina(codeEmisor);
+        }
+        else
+        {
+            NavManager.NavigateTo("/TrabajadoresIndex");
+        }
+
+    }
+
+    private async Task Search()
+    {
+
+
+        if (string.IsNullOrEmpty(SearchInput))
+        {
+            cuentasContablesNomina = await cuentaContableNominaController.GetNomina(codeEmisor);
+        }
+        else
+        {
+            cuentasContablesNomina = await cuentaContableNominaController.GetNominaByName(SearchInput);
+        }
+    }
+
+    private async Task BtnCreate()
+    {
+        forEdit = false;
+        forCreate = true;
+        isDelete = false;
+        GestionCuentaContableNominaForCreate = new GestionCuentaContableNomina();
+    }
+
+    private async Task BtnCancel()
+    {
+        forCreate = false;
+        forEdit = false;
+        isDelete = false;
+    }
+
+    private async Task BtnDelete()
+    {
+        forCreate = false;
+        forEdit = false;
+        isDelete = true;
+        GestionCuentaContableNominaToDelete = new GestionCuentaContableNomina();
+    }
+
+    private async Task CreateNomina()
+    {
+        if (await cuentaContableNominaController.CreateNomina(GestionCuentaContableNominaForCreate))
+        {
+            ToastService.ShowSuccess("Se ha creado una nueva cuenta contable de nomina");
+            forCreate = false;
+            forEdit = false;
+            cuentasContablesNomina = await cuentaContableNominaController.GetNomina(codeEmisor);
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido crear la nueva cuenta contable");
+        }
+    }
+
+    private async Task BtnEdit(GestionCuentaContableNomina cuentaContableNomina)
+    {
+        forCreate = false;
+        forEdit = true;
+        GestionCuentaContableNominaForEdit = cuentaContableNomina;
+    }
+
+    private async Task EditNomina()
+    {
+
+        if (await cuentaContableNominaController.UpdateNomina(GestionCuentaContableNominaForEdit))
+        {
+            cuentasContablesNomina = await cuentaContableNominaController.GetNomina(codeEmisor);
+            ToastService.ShowSuccess("Se ha actualizado la cuenta de nomina");
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido actualizar la cuenta contable");
+        }
+        forEdit = false;
+    }
+
+    private async Task DeleteNomina(GestionCuentaContableNomina cuentaContableNominaToDelete)
+    {
+        if (await cuentaContableNominaController.DeleteNomina(cuentaContableNominaToDelete))
+        {
+            cuentasContablesNomina = await cuentaContableNominaController.GetNomina(codeEmisor);
+            ToastService.ShowSuccess("Se ha borrado a cuenta contable");
+        }
+        else
+        {
+            ToastService.ShowWarning("No se ha podido borrar la cuenta contable");
+        }
+    }
+    #endregion
 }
