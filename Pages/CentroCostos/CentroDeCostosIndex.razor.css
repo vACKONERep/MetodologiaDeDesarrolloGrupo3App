@@ -112,3 +112,119 @@
         justify-content: center;
     }
 }
+
+
+
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #d1c7e9; /* Fondo morado claro */
+    overflow: hidden;
+    position: relative;
+}
+
+    /* Añadiendo formas moradas oscuras al fondo */
+    .login-container::before,
+    .login-container::after,
+    .login-container > div::before,
+    .login-container > div::after {
+        content: "";
+        position: absolute;
+        background: rgba(#000000); /* Formas moradas */
+        z-index: -1; /* Poner las formas detrás de los elementos principales */
+    }
+
+    /* Ajustando propiedades específicas para cada forma */
+    .login-container::before {
+        width: 350px;
+        height: 350px;
+        border-radius: 50%;
+        top: -175px;
+        left: -175px;
+    }
+
+    .login-container::after {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        bottom: -125px;
+        right: -125px;
+    }
+
+    .login-container > div::before {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        bottom: -75px;
+        left: -75px;
+    }
+
+    .login-container > div::after {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        top: -100px;
+        right: -100px;
+    }
+
+.login-card {
+    background: white;
+    border-radius: 5px;
+    padding: 30px 40px; /* Aumento del padding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px; /* Aumento del width */
+}
+
+::deep .login-form label {
+    display: block;
+    margin-bottom: 10px; /* Aumento del margen */
+}
+
+::deep .login-form input {
+    width: 100%;
+    padding: 12px 15px; /* Aumento del padding */
+    margin: 15px 0; /* Aumento del margen */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+::deep .login-form select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px; /* Aumento del padding */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .login-btn:hover {
+        background-color: #0056b3;
+    }
+
+/* Estilos para las opciones de Registrarse y Restablecer contraseña */
+.login-actions {
+    margin-top: 15px;
+    text-align: center;
+}
+
+    .login-actions a {
+        text-decoration: none;
+        color: #007bff;
+        margin: 0 10px;
+    }
+
+        .login-actions a:hover {
+            text-decoration: underline;
+        }

@@ -2,6 +2,8 @@
 
 @using MetodologiaDeDesarrolloGrupo3App.Controllers;
 @using MetodologiaDeDesarrolloGrupo3App.Models.CentroCostos
+@using MetodologiaDeDesarrolloGrupo3App.Models.Users
+@using Newtonsoft.Json;
 
 @inject NavigationManager NavManager
 @inject IToastService ToastService
@@ -10,76 +12,102 @@
     <Authorized>
         <PageTitle>Centro de Costos</PageTitle>
 
-        <h2>Centros de Costo</h2>
-        <hr>
-        <div class="search-container">
-            <input class="search-input" @bind="SearchInput" placeholder="Nombre del Centro">
-            <button class="search-button" @onclick="(() => Search())">Buscar</button>
-        </div>
-        <hr>
-        @if (forCreate)
+        @if (isAuthorized)
         {
-            <div class="form-group">
-                <input class="form-control" @bind="CentroCostosForCreate.Codigo" placeholder="Código del Centro">
-                <input class="form-control" @bind="CentroCostosForCreate.NombreCentroCostos" placeholder="Nombre del Centro">
-                <button class="btn btn-create" @onclick="(() => CreateCentro())">Crear</button>
-                <button class="btn btn-cancel" @onclick="(() => BtnCancel())">Cancelar</button>
+            <h2>Centros de Costo</h2>
+            <hr>
+            <div class="search-container">
+                <input class="search-input" @bind="SearchInput" placeholder="Nombre del Centro">
+                <button class="search-button" @onclick="(() => Search())">Buscar</button>
             </div>
+            <hr>
+            @if (forCreate)
+            {
+                <div class="form-group">
+                    <input class="form-control" @bind="CentroCostosForCreate.Codigo" placeholder="Código del Centro">
+                    <input class="form-control" @bind="CentroCostosForCreate.NombreCentroCostos" placeholder="Nombre del Centro">
+                    <button class="btn btn-create" @onclick="(() => CreateCentro())">Crear</button>
+                    <button class="btn btn-cancel" @onclick="(() => BtnCancel())">Cancelar</button>
+                </div>
 
-        }
-        else if (forEdit)
-        {
-            <div class="form-group">
-                <input @bind="CentroCostosForEdit.Codigo" placeholder="Código del Centro">
-                <input @bind="CentroCostosForEdit.NombreCentroCostos" placeholder="Código del Centro">
-                <br>
-                <button class="create-button" @onclick="(() => EditCentro())">Editar</button>
-                <br>
-                <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
-            </div>
+            }
+            else if (forEdit)
+            {
+                <div class="form-group">
+                    <input @bind="CentroCostosForEdit.Codigo" placeholder="Código del Centro">
+                    <input @bind="CentroCostosForEdit.NombreCentroCostos" placeholder="Código del Centro">
+                    <br>
+                    <button class="create-button" @onclick="(() => EditCentro())">Editar</button>
+                    <br>
+                    <button class="delete-button" @onclick="(() => BtnCancel())">Cancelar</button>
+                </div>
+            }
+            else
+            {
+                <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro</button>
+            }
+
+            <br>
+            <br>
+
+            <table class="centros-table">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre Centro de Costos</th>
+                        <th>Editar</th>
+                        <th>Borrar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var centro in centrosDeCostos)
+                    {
+                        <tr>
+                            <td>@centro.Codigo</td>
+                            <td>@centro.NombreCentroCostos</td>
+                            <td>
+                                <button class="edit-button" @onclick="(() => BtnEdit(centro))">Editar</button>
+                            </td>
+                            <td>
+                                <button class="delete-button" @onclick="(() => DeleteCentro(centro))">Borrar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
         else
         {
-            <button class="create-button" @onclick="(() => BtnCreate())">Crear nuevo centro</button>
+            <div class="login-container">
+                <div class="login-card">
+                    <h2>Acceso autorizado</h2>
+                    <div class="login-form">
+
+                        <label for="Usuario">Usuario:</label>
+                        <input id="Usuario" @bind="userToAuth.UserName" placeholder="0000" />
+
+                        <label for="password">Contraseña:</label>
+                        <input id="password" @bind="userToAuth.Password" type="password" placeholder="Contraseña" />
+
+                        <button class="login-btn" @onclick="Authenticate">Autenticar</button>
+
+                    </div>
+                </div>
+            </div>
         }
-
-        <br>
-        <br>
-
-        <table class="centros-table">
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Nombre Centro de Costos</th>
-                    <th>Editar</th>
-                    <th>Borrar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var centro in centrosDeCostos)
-                {
-                    <tr>
-                        <td>@centro.Codigo</td>
-                        <td>@centro.NombreCentroCostos</td>
-                        <td>
-                            <button class="edit-button" @onclick="(() => BtnEdit(centro))">Editar</button>
-                        </td>
-                        <td>
-                            <button class="delete-button" @onclick="(() => DeleteCentro(centro))">Borrar</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
     </Authorized>
 </AuthorizeView>
 
 @code {
 
+
+    HttpClient httpC = new HttpClient();
+
     #region Cantro costos properties Vars n Props
     public bool forCreate { get; set; }
     public bool forEdit { get; set; }
+
+    public bool isAuthorized { get; set; }
 
     public string SearchInput { get; set; }
 
@@ -87,6 +115,9 @@
     public CentroCostos CentroCostosForEdit { get; set; }
     public List<CentroCostos> centrosDeCostos = new List<CentroCostos>();
     public CentroCostosController centroDeCostosController = new CentroCostosController();
+
+    public Usuario userToAuth = new Usuario();
+
     #endregion
 
     #region Events
@@ -94,6 +125,9 @@
     protected override async Task OnInitializedAsync()
     {
         centrosDeCostos = await centroDeCostosController.GetCentrosCostos();
+
+        isAuthorized = false;
+
     }
 
     private async Task Search()
@@ -170,5 +204,42 @@
             ToastService.ShowWarning("No se ha podido borrar el centro de costos");
         }
     }
+
+    private async Task Authenticate()
+    
+    {
+        httpC = new HttpClient(new HttpClientHandler() { ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }, }, false);
+        httpC.Timeout = TimeSpan.FromSeconds(7);
+        httpC.BaseAddress = new Uri("http://apiservicios.ecuasolmovsa.com:3009/api/");
+
+
+        HttpResponseMessage response = await httpC.GetAsync($"Varios/GetAutorizador?usuario={userToAuth.UserName}&password={userToAuth.Password}");
+
+        if (response.IsSuccessStatusCode)
+        {
+            string content = await response.Content.ReadAsStringAsync();
+
+            if (content.Contains("INGRESO EXITOSO"))
+            {
+                ToastService.ShowSuccess("Ingreso Exitoso");
+
+                isAuthorized = true;
+
+                StateHasChanged();
+            }
+            else
+            {
+                ToastService.ShowError("Acceso no autorizado");
+            }
+
+        }
+        else
+        {
+            ToastService.ShowError("Error en el servidor");
+        }
+
+        
+    }
+
     #endregion
 }
