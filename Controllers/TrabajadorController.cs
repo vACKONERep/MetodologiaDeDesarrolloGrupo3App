@@ -128,16 +128,17 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
 
                 if (TrabajadorList.Count <= 0) throw new Exception();
 
-                TipoTrabajadorList.Add(new TipoTrabajador("Sin tipo...", " "));
+                TipoTrabajadorList.Add(new TipoTrabajador(" ", "Sin tipo..."));
                 TipoCeseList.Add(new TipoCese(" ", "Sin especificar..."));
+                TipoComisionList.Add(new TipoComision("Sin especificar...", " "));
 
                 foreach (var Trabajador in TrabajadorList)
                 {
-                    Trabajador.Tipo_trabajadorAPI = TipoTrabajadorList.FirstOrDefault(ol => ol.Descripcion.Trim() == Trabajador.Tipo_trabajador.Trim()).Codigo;
+                    Trabajador.Tipo_trabajadorAPI = TipoTrabajadorList.Where(tt => tt.Codigo == Trabajador.Tipo_trabajador).FirstOrDefault().Descripcion;
                     Trabajador.GeneroAPI = GenerosList.FirstOrDefault(gl => gl.Codigo.Trim() == Trabajador.Genero.Trim()).Descripcion;
                     Trabajador.EstadoTrabajadorAPI = EstadoTrabajadorList.FirstOrDefault(ol => ol.Codigo.Trim() == Trabajador.EstadoTrabajador.Trim()).Descripción;
                     var periodoVac =  PeriodoVacacionesList.FirstOrDefault(ol => ol.Codigo.Trim() == Trabajador.PeriododeVacaciones.ToString());
-                    Trabajador.TipodeComisionAPI = TipoComisionList.FirstOrDefault(ol => ol.Descripcion == Trabajador.TipodeComision).Codigo;
+                    Trabajador.TipodeComisionAPI = TipoComisionList.Where(tt => tt.Descripcion == Trabajador.TipodeComision).FirstOrDefault().Codigo;
                     Trabajador.FormaCalculo13roAPI = DecimoTerceroDecimoCuartoList.FirstOrDefault(ol => ol.Codigo == Trabajador.FormaCalculo13ro.ToString()).Descripcion;
                     Trabajador.FormaCalculo14roAPI = DecimoTerceroDecimoCuartoList.FirstOrDefault(ol => ol.Codigo == Trabajador.FormaCalculo14ro.ToString()).Descripcion;
                     Trabajador.Fondo_ReservaAPI = FondoReservaList.FirstOrDefault(ol => ol.Codigo.Trim() == Trabajador.Fondo_Reserva.Trim()).Descripcion;
