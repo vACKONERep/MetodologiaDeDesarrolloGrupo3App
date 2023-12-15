@@ -167,5 +167,21 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
                 return new List<Trabajador>();
             }
         }
+
+        public async Task<List<Genero>> GetGeneros()
+        {
+            try
+            {
+                HttpResponseMessage httpResponseGeneros = await httpClient.GetAsync($"Varios/Genero");
+                string GenerosToString = await httpResponseGeneros.Content.ReadAsStringAsync();
+                GenerosList = JsonConvert.DeserializeObject<List<Genero>>(GenerosToString);
+
+                return GenerosList;
+            }
+            catch (Exception ex)
+            {
+                return new List<Genero>();
+            }
+        }
     }
 }

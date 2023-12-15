@@ -15,26 +15,81 @@
     <nav class="flex-column">
         <AuthorizeView>
             <Authorized>
+                @if (nivel == 0)
+                {
+                    <NavLink class="nav-link" @onclick="() => GoToNextOption('C')">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Menú Centro de Costos
+                    </NavLink>
 
-                <NavLink class="nav-link" @onclick="ShowCentroDeCostos">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Centro de Costos
-                </NavLink>
+                    <NavLink class="nav-link" @onclick="() => GoToNextOption('E')">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Menu Empleados
+                    </NavLink>
 
-                <NavLink class="nav-link" @onclick="ShowTrabajadoresList">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Listado de Empleados
-                </NavLink>
+                    <NavLink class="nav-link" @onclick="() => GoToNextOption('M')">
+                        <span class="oi oi-list-rich" aria-hidden="true"></span> Menú Movimientos Planilla
+                    </NavLink>
 
-                <NavLink class="nav-link" @onclick="ShowMovimientosList">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Movimientos Planilla
-                </NavLink>
+                    <NavLink class="nav-link" @onclick="LogOutUser">
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Cerrar Sesión
+                    </NavLink>
 
-                <NavLink class="nav-link" @onclick="ShowNominaList">
-                    <span class="oi oi-list-rich" aria-hidden="true"></span> Gestión de Nómina
-                </NavLink>
+                }
+                else
+                {
+                    if (seccion.Equals('C'))
+                    {
+                        <NavLink class="nav-link" @onclick="ShowCentroDeCostos">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Ver Centros
+                        </NavLink>
 
-                <NavLink class="nav-link" @onclick="LogOutUser">
-                    <span class="oi oi-account-logout" aria-hidden="true"></span> Cerrar Sesión
-                </NavLink>
+                        <NavLink class="nav-link" @onclick="ReturnToLastOption">
+                            <span class="oi oi-account-logout" aria-hidden="true"></span> Volver
+                        </NavLink>
+                    }
+
+                    if (seccion.Equals('E'))
+                    {
+                        <NavLink class="nav-link" @onclick="ShowTrabajadoresList">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Ver Empleados
+                        </NavLink>
+
+                        <NavLink class="nav-link" @onclick="ReturnToLastOption">
+                            <span class="oi oi-account-logout" aria-hidden="true"></span> Volver
+                        </NavLink>
+                    }
+
+                    if (seccion.Equals('M'))
+                    {
+                        <NavLink class="nav-link" @onclick="ShowMovimientosList">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Ver Movimientos
+                        </NavLink>
+
+                        <NavLink class="nav-link" @onclick="ShowExc1y2">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Excepción 1 y 2
+                        </NavLink>
+
+                        <NavLink class="nav-link" @onclick="ShowExcec3">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Excepción 3
+                        </NavLink>
+
+                        <NavLink class="nav-link" @onclick="ShowTipoOperacion">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Tipo Operación
+                        </NavLink>
+
+                        <NavLink class="nav-link" @onclick="ShowTrabaAfectaIess">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> T. Afecta Iess
+                        </NavLink>
+
+                        <NavLink class="nav-link" @onclick="ShowTrabaAfectaImpuestoRenta">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> T. Afecta Impuesto
+                        </NavLink>
+
+                        <NavLink class="nav-link" @onclick="ReturnToLastOption">
+                            <span class="oi oi-account-logout" aria-hidden="true"></span> Volver
+                        </NavLink>
+
+                    }
+                }
 
             </Authorized>
         </AuthorizeView>
@@ -44,11 +99,27 @@
 @code {
     private bool collapseNavMenu = true;
 
+    private int nivel { get; set; }
+
+    private char? seccion { get; set; }
+
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    private async Task GoToNextOption(char seccionSelected)
+    {
+        nivel++;
+        seccion = seccionSelected;
+    }
+
+    private async Task ReturnToLastOption()
+    {
+        nivel--;
+        seccion = null;
     }
 
     private async Task LogOutUser()
@@ -82,5 +153,30 @@
     {
         navManager.NavigateTo("/CentroDeCostosIndex", true);
 
+    }
+
+    private async Task ShowExc1y2()
+    {
+        navManager.NavigateTo("/movimientoExcepcion1y2", true);
+    }
+
+    private async Task ShowExcec3()
+    {
+        navManager.NavigateTo("/movimientoExcepcion3", true);
+    }
+
+    private async Task ShowTipoOperacion()
+    {
+        navManager.NavigateTo("/tipoOperacion", true);
+    }
+
+    private async Task ShowTrabaAfectaIess()
+    {
+        navManager.NavigateTo("/trabaAfectaIess", true);
+    }
+
+    private async Task ShowTrabaAfectaImpuestoRenta()
+    {
+        navManager.NavigateTo("/trabaAfectaImpuestoRenta", true);
     }
 }

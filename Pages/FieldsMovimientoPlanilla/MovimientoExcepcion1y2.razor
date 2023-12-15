@@ -1,0 +1,35 @@
+﻿@page "/movimientoExcepcion1y2"
+@using MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields
+@using MetodologiaDeDesarrolloGrupo3App.Controllers
+
+<PageTitle>ovimiento Excepcion 3</PageTitle>
+
+<h2>Movimiento Excepcion 1 y 2</h2>
+<hr>
+<table class="centros-table">
+    <thead>
+        <tr>
+            <th>Código Movimiento Excepción</th>
+            <th>Descripción Movimiento Excepción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movimientoExcep1y2 in movimientosExcep1y2)
+        {
+            <tr>
+                <td>@movimientoExcep1y2.CodigoMovimientoExce</td>
+                <td>@movimientoExcep1y2.DesripMovimientoExce</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    public List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.MovimientosExcepcion1y2> movimientosExcep1y2 = new List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.MovimientosExcepcion1y2>();
+    public MovimientoPlanillaController movimientoPlanillaController = new MovimientoPlanillaController();
+    protected override async Task OnInitializedAsync()
+    {
+        movimientosExcep1y2 = await movimientoPlanillaController.GetExcepcion1y2();
+    }
+}

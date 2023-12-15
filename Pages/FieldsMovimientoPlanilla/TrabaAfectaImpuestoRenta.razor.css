@@ -3,6 +3,7 @@
     gap: 20px;
     vertical-align: central;
 }
+
 h1 {
     font-size: 28px;
     color: #333;
@@ -10,17 +11,6 @@ h1 {
 
 .p {
     font-size: 28px;
-}
-
-.button-excel {
-    background-color: seagreen;
-    border-radius: 5px;
-    color: white;
-    border: none;
-    font-size: 18px;
-    max-width: 10rem;
-    padding: 0px 20px;
-    margin: 5px 0px;
 }
 
 .table {

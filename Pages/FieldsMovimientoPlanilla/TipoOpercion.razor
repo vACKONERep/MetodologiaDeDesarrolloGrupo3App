@@ -1,0 +1,35 @@
+﻿@page "/tipoOperacion"
+@using MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields
+@using MetodologiaDeDesarrolloGrupo3App.Controllers
+
+<PageTitle>Tipo Operación</PageTitle>
+
+<h2>Tipo Operación</h2>
+<hr>
+<table class="centros-table">
+    <thead>
+        <tr>
+            <th>Código Tipo Operación</th>
+            <th>Nombre Operación</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tipoOperacion in tipoOperaciones)
+        {
+            <tr>
+                <td>@tipoOperacion.CodigoTipooperacion</td>
+                <td>@tipoOperacion.NombreOperacion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    public List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.TipoOperacion> tipoOperaciones = new List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.TipoOperacion>();
+    public MovimientoPlanillaController movimientoPlanillaController = new MovimientoPlanillaController();
+    protected override async Task OnInitializedAsync()
+    {
+        tipoOperaciones = await movimientoPlanillaController.GetTipoOperacion();
+    }
+}

@@ -67,11 +67,22 @@
 
 ::deep .login-form input {
     width: 100%;
-    padding: 12px 15px; /* Aumento del padding */
-    margin: 15px 0; /* Aumento del margen */
+    padding: 12px 15px;
+    margin: 15px 0; 
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+::deep input[type=number]::-webkit-inner-spin-button,
+::deep input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+::deep input[type=number] {
+    -moz-appearance: textfield;
+}
+
 
 ::deep .login-form select {
     width: 100%;

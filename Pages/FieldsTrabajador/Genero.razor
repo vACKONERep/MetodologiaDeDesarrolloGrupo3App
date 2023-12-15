@@ -1,0 +1,37 @@
+﻿@page "/generos"
+@using MetodologiaDeDesarrolloGrupo3App.Controllers
+@using MetodologiaDeDesarrolloGrupo3App.Models.Trabajador;
+@using MetodologiaDeDesarrolloGrupo3App.Models.Trabajador.TrabajadorFields;
+@using MetodologiaDeDesarrolloGrupo3App.Models.Trabajador.TrabajadorFileds;
+<PageTitle>Género</PageTitle>
+
+<h2>Género</h2>
+<hr>
+<table class="centros-table">
+    <thead>
+        <tr>
+            <th>Código</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var genero in generosList)
+        {
+            <tr>
+                <td>@genero.Codigo</td>
+                <td>@genero.Descripcion</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    public List<MetodologiaDeDesarrolloGrupo3App.Models.Trabajador.TrabajadorFileds.Genero> generosList { get; set; }
+    public TrabajadorController trabajadorController { get; set; } = new TrabajadorController();
+
+    protected override async Task OnInitializedAsync()
+    {
+        generosList = await trabajadorController.GetGeneros();
+    }
+}

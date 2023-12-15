@@ -1,0 +1,43 @@
+﻿@page "/trabaAfectaImpuestoRenta"
+@using MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields
+@using MetodologiaDeDesarrolloGrupo3App.Controllers
+
+<PageTitle>Trabajo Afecta Iess</PageTitle>
+
+<h2>Trabajo Afecta Impuesto a la Renta</h2>
+<hr>
+<table class="centros-table">
+    <thead>
+        <tr>
+            <th>Movimiento movimiento excepción</th>
+            <th>Descripción movimiento excepción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (trabajoAfectaImpuestoRentas == null)
+        {
+            <p>No existen registros</p>
+        }
+        else
+        {
+            @foreach (var trabajoAfectaImpuestoRenta in trabajoAfectaImpuestoRentas)
+            {
+                <tr>
+                    <td>@trabajoAfectaImpuestoRenta.CodigoMovimientoExce</td>
+                    <td>@trabajoAfectaImpuestoRenta.DesripMovimientoExce</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@code {
+
+    public List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.TrabAfecImpuestoRenta> trabajoAfectaImpuestoRentas = new List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.TrabAfecImpuestoRenta>();
+    public MovimientoPlanillaController movimientoPlanillaController = new MovimientoPlanillaController();
+    
+    protected override async Task OnInitializedAsync()
+    {
+        trabajoAfectaImpuestoRentas = await movimientoPlanillaController.GetTrabaAfecImpuestoRenta();
+    }
+}

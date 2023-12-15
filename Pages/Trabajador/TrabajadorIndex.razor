@@ -4,6 +4,7 @@
 @using MetodologiaDeDesarrolloGrupo3App.Models.Emisor
 @using System.Security.Claims;
 @using MetodologiaDeDesarrolloGrupo3App.Models.Trabajador;
+@using ClosedXML.Excel;
 @inject IJSRuntime js
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -12,14 +13,19 @@
 <AuthorizeView>
     <Authorized>
 
-        <h1>Trabajadores de la sucursal</h1>
+        <div class="top-row">
+            <h1>Trabajadores de la sucursal</h1>
+            <h1>|</h1>
+            <button class="button-excel" id="btnGenerarExcel" @onclick="GenerarReporte" disabled="@EnableDownload">Generar Excel</button>
+        </div>
+
         <table class="table">
             <thead>
                 <tr>
                     <th>Código</th>
                     <th>ID Trabajador</th>
                     <th>Tipo de Trabajador</th>
-                    <th>Apellido Paterno</th> 
+                    <th>Apellido Paterno</th>
                     <th>Apellido Materno</th>
                     <th>Nombres</th>
                     <th>Identificación</th>
@@ -139,11 +145,11 @@
     private ClaimsPrincipal AuthenticationStateProviderUser { get; set; }
 
     private List<Trabajador> trabajadores { get; set; }
+    private bool EnableDownload { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
         TrabajadorController trabajadorController = new TrabajadorController();
-
         AuthenticationState authenticationState;
 
         authenticationState = await authenticationStateTask;
@@ -161,6 +167,8 @@
 
             trabajadores = await trabajadorController.GetTrabajadoresByCode(int.Parse(codigoEmisor));
 
+            EnableDownload = false;
+
             if (trabajadores != null)
             {
                 ToastService.ClearWarningToasts();
@@ -170,6 +178,47 @@
                 ToastService.ShowSuccess("No se ha podido cargar información!");
                 ToastService.ClearSuccessToasts();
             }
+        }
+    }
+
+    private async Task GenerarReporte()
+    {
+        using (var libro = new XLWorkbook())
+        {
+            IXLWorksheet hoja = libro.Worksheets.Add("empleados");
+
+            hoja.Cell(1, 1).Value = "Número de identificación";
+            hoja.Cell(1, 2).Value = "Tipo Documento";
+            hoja.Cell(1, 3).Value = "Nombres";
+            hoja.Cell(1, 4).Value = "Apellido Paterno";
+            hoja.Cell(1, 5).Value = "Apellido Materno";
+            hoja.Cell(1, 6).Value = "Género";
+            hoja.Cell(1, 7).Value = "Salario";
+
+            for (int fila = 1; fila <= trabajadores.Count; fila++)
+            {
+                hoja.Cell(fila + 1, 1).Value = trabajadores[fila - 1].Identificacion;
+                hoja.Cell(fila + 1, 2).Value = "Cédula Ecuatoriana";
+                hoja.Cell(fila + 1, 3).Value = trabajadores[fila - 1].Nombres;
+                hoja.Cell(fila + 1, 4).Value = trabajadores[fila - 1].Apellido_Paterno;
+                hoja.Cell(fila + 1, 5).Value = trabajadores[fila - 1].Apellido_Materno;
+                hoja.Cell(fila + 1, 6).Value = trabajadores[fila - 1].GeneroAPI;
+                hoja.Cell(fila + 1, 7).Value = trabajadores[fila - 1].Remuneracion_Minima;
+            }
+
+            using (var memoria = new MemoryStream())
+            {
+                libro.SaveAs(memoria);
+                var nombreExcel = string.Concat("Reporte ", DateTime.Now.ToString(), ".xlsx");
+
+                await js.InvokeAsync<object>(
+                    "DescargarExcel",
+                    nombreExcel,
+                    Convert.ToBase64String(memoria.ToArray())
+                );
+            }
+
+
         }
     }
 }

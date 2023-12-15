@@ -23,6 +23,91 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
             httpClient.BaseAddress = new Uri("http://apiservicios.ecuasolmovsa.com:3009/api/");
         }
 
+        public async Task<List<MovimientosExcepcion1y2>> GetExcepcion1y2()
+        {
+            try
+            {
+                /****MOV EXCEP 1 Y 2*****/
+                HttpResponseMessage httpResponseMovimientosExcepcion1y2 = await httpClient.GetAsync($"Varios/MovimientosExcepcion1y2");
+                string MovimientosExcepcion1y2ToString = await httpResponseMovimientosExcepcion1y2.Content.ReadAsStringAsync();
+                MovimientosExcepcion1y2List = JsonConvert.DeserializeObject<List<MovimientosExcepcion1y2>>(MovimientosExcepcion1y2ToString);
+
+                return MovimientosExcepcion1y2List;
+            }
+            catch (Exception ex)
+            {
+                return new List<MovimientosExcepcion1y2>();
+            }
+        }
+
+        public async Task<List<MovimientosExcepcion3>> GetExcepcion3()
+        {
+            try
+            {
+                /****MOV EXCEP 3*****/
+                HttpResponseMessage httpResponseMovimientosExcepcion3 = await httpClient.GetAsync($"Varios/MovimientosExcepcion3");
+                string MovimientosExcepcion3ToString = await httpResponseMovimientosExcepcion3.Content.ReadAsStringAsync();
+                MovimientosExcepcion3List = JsonConvert.DeserializeObject<List<MovimientosExcepcion3>>(MovimientosExcepcion3ToString);
+
+                return MovimientosExcepcion3List;
+            }
+            catch (Exception ex)
+            {
+                return new List<MovimientosExcepcion3>();
+            }
+        }
+
+        public async Task<List<TrabaAfectaIESS>> GetTrabaAfectaIess()
+        {
+            try
+            {
+                /****TRAB AFECTA IESS*****/
+                HttpResponseMessage httpResponseTrabaAfectaIESS = await httpClient.GetAsync($"Varios/TrabaAfectaIESS");
+                string TrabaAfectaIESSToString = await httpResponseTrabaAfectaIESS.Content.ReadAsStringAsync();
+                TrabaAfectaIESSList = JsonConvert.DeserializeObject<List<TrabaAfectaIESS>>(TrabaAfectaIESSToString);
+
+                return TrabaAfectaIESSList;
+            }
+            catch (Exception ex)
+            {
+                return new List<TrabaAfectaIESS>();
+            }
+        }
+
+        public async Task<List<TipoOperacion>> GetTipoOperacion()
+        {
+            try
+            {
+                /****TIPO OPERACION*****/
+                HttpResponseMessage httpResponseTipoOperacion = await httpClient.GetAsync($"Varios/TipoOperacion");
+                string TipoOperacionToString = await httpResponseTipoOperacion.Content.ReadAsStringAsync();
+                TipoOperacionList = JsonConvert.DeserializeObject<List<TipoOperacion>>(TipoOperacionToString);
+
+                return TipoOperacionList;
+            }
+            catch (Exception ex)
+            {
+                return new List<TipoOperacion>();
+            }
+        }
+
+        public async Task<List<TrabAfecImpuestoRenta>> GetTrabaAfecImpuestoRenta()
+        {
+            try
+            {
+                /****TRAB AFECTA IMP RENTA*****/
+                HttpResponseMessage httpResponseTrabAfecImpuestoRenta = await httpClient.GetAsync($"Varios/TrabAfecImpuestoRenta");
+                string TrabAfecImpuestoRentaToString = await httpResponseTrabAfecImpuestoRenta.Content.ReadAsStringAsync();
+                TrabAfecImpuestoRentaList = JsonConvert.DeserializeObject<List<TrabAfecImpuestoRenta>>(TrabAfecImpuestoRentaToString);
+
+                return TrabAfecImpuestoRentaList;
+            }
+            catch (Exception ex)
+            {
+                return new List<TrabAfecImpuestoRenta>();
+            }
+        }
+
         public async Task<List<MovimientoPlanilla>> GetMovimientosPlantilla()
         {
             try
@@ -226,7 +311,9 @@ namespace MetodologiaDeDesarrolloGrupo3App.Controllers
         }
 
 
+        public async Task GetGeneros()
+        {
 
-
+        }
     }
 }

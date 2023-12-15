@@ -1,0 +1,35 @@
+﻿@page "/trabaAfectaIess"
+@using MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields
+@using MetodologiaDeDesarrolloGrupo3App.Controllers
+
+<PageTitle>Trabajo Afecta Iess</PageTitle>
+
+<h2>Trabajo Afecta Iess</h2>
+<hr>
+<table class="centros-table">
+    <thead>
+        <tr>
+            <th>Movimiento movimiento excepción</th>
+            <th>Descripción movimiento excepción</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var trabajoAfectaIess in trabajoAfectaIessEs)
+        {
+            <tr>
+                <td>@trabajoAfectaIess.CodigoMovimientoExce</td>
+                <td>@trabajoAfectaIess.DesripMovimientoExce</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    public List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.TrabaAfectaIESS> trabajoAfectaIessEs = new List<MetodologiaDeDesarrolloGrupo3App.Models.MovimientoPlanilla.MovimientoPlanillaFields.TrabaAfectaIESS>();
+    public MovimientoPlanillaController movimientoPlanillaController = new MovimientoPlanillaController();
+    protected override async Task OnInitializedAsync()
+    {
+        trabajoAfectaIessEs = await movimientoPlanillaController.GetTrabaAfectaIess();
+    }
+}

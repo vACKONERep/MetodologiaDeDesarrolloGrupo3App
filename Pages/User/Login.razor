@@ -17,8 +17,8 @@
                 <DataAnnotationsValidator />
 
                 <ValidationSummary />
-                <label for="email">Correo Electrónico/ Usuario:</label>
-                <InputText @bind-Value="model!.UserName" placeholder="0000" />
+                <label for="email">Número de Usuario:</label>
+                <InputNumber @bind-Value="model!.UserName"  placeholder="0000"/>
 
                 <label for="password">Contraseña:</label>
                 <InputText @bind-Value="model!.Password" type="password" placeholder="Contraseña" />
@@ -58,8 +58,7 @@
         public UserLogin() { }
 
         [Required(ErrorMessage = "Ingrese su usuario")]
-        [StringLength(4, ErrorMessage = "Contraseña máximo 4 caracteres")]
-        public string UserName { get; set; }
+        public int UserName { get; set; }
 
         [Required(ErrorMessage = "Ingrese su contraseña")]
         [StringLength(5, ErrorMessage = "Contraseña máximo 5 caracteres")]
@@ -92,7 +91,7 @@
 
         UserController UC = new UserController();
 
-        userLogged = await UC.GetUserByModel(model.UserName, model.Password, model.SelectedProvince);
+        userLogged = await UC.GetUserByModel(model.UserName.ToString(), model.Password, model.SelectedProvince);
 
         if (userLogged == null)
         {
@@ -116,7 +115,7 @@
 
         IsAuth = true;
 
-        userLogged.UserName = model.UserName;
+        userLogged.UserName = model.UserName.ToString();
         userLogged.Password = model.Password;
     }
 
@@ -134,4 +133,20 @@
         }
     }
 
+    public void CheckLenght()
+    {
+        string userNameString;
+        if (model.UserName.ToString().Length <= 4)
+        {
+            return;
+        }
+        else
+        {
+            userNameString = model.UserName.ToString().Substring(0, 3);
+
+            model.UserName = int.Parse(userNameString);
+
+            StateHasChanged();
+        }
+    }
 }
