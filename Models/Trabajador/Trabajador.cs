@@ -139,6 +139,52 @@ namespace MetodologiaDeDesarrolloGrupo3App.Models.Trabajador
         [JsonProperty("Remuneracion_Minima")]
         public int Remuneracion_Minima { get; set; }
 
+        public decimal IESS_PATRONAL
+        {
+            get
+            {
+                try
+                {
+                    return decimal.Round(this.Remuneracion_Minima * ((decimal)(0.1115)), 2);
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+
+            }
+        }
+        public decimal IESS_PERSONAL
+        {
+            get
+            {
+                try
+                { 
+                    return decimal.Round(this.Remuneracion_Minima * ((decimal)(0.0945)), 2);
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+            }
+        }
+
+        public decimal Total
+        {
+            get
+            {
+                try
+                {
+                    return decimal.Round((Remuneracion_Minima + IESS_PATRONAL + IESS_PERSONAL), 2);
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+                
+            }
+        }
+
         [JsonProperty("CuotaCuentaCorriente")]
         public int CuotaCuentaCorriente { get; set; }
 

@@ -53,6 +53,10 @@
                             <span class="oi oi-list-rich" aria-hidden="true"></span> Ver Empleados
                         </NavLink>
 
+                        <NavLink class="nav-link" @onclick="ShowRolPagos">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> Rol de Pagos
+                        </NavLink>
+
                         <NavLink class="nav-link" @onclick="ReturnToLastOption">
                             <span class="oi oi-account-logout" aria-hidden="true"></span> Volver
                         </NavLink>
@@ -128,31 +132,31 @@
         await customAuthStateProvider.UpdateAuthenticationState(null);
 
         navManager.NavigateTo("/", true);
-
     }
 
     private async Task ShowTrabajadoresList()
     {
         navManager.NavigateTo("/TrabajadoresIndex", true);
+    }
 
+    private async Task ShowRolPagos()
+    {
+        navManager.NavigateTo("/RolPagosIndex", true);
     }
 
     private async Task ShowMovimientosList()
     {
         navManager.NavigateTo("/MovimientoPlanillaIndex", true);
-
     }
 
     private async Task ShowNominaList()
     {
         navManager.NavigateTo("/GestionCuentaContableNominaIndex", true);
-
     }
 
     private async Task ShowCentroDeCostos()
     {
         navManager.NavigateTo("/CentroDeCostosIndex", true);
-
     }
 
     private async Task ShowExc1y2()
