@@ -139,49 +139,49 @@ namespace MetodologiaDeDesarrolloGrupo3App.Models.Trabajador
         [JsonProperty("Remuneracion_Minima")]
         public int Remuneracion_Minima { get; set; }
 
-        public decimal IESS_PATRONAL
-        {
-            get
-            {
-                try
-                {
-                    return decimal.Round(this.Remuneracion_Minima * ((decimal)(0.1115)), 2);
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
+        public decimal IESS_Patronal => CalculateIESSPatronal();
 
-            }
-        }
-        public decimal IESS_PERSONAL
+        public decimal IESS_Personal => CalculateIESSPersonal();
+
+        public decimal Total => CalculateTotal();
+
+        #region
+
+        
+
+        private decimal CalculateIESSPatronal()
         {
-            get
+            try
             {
-                try
-                { 
-                    return decimal.Round(this.Remuneracion_Minima * ((decimal)(0.0945)), 2);
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
+                return decimal.Round(RemuneracionMinima * Constants.IESSPatronalPercentage, 2);
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
 
-        public decimal Total
+        private decimal CalculateIESSPersonal()
         {
-            get
+            try
             {
-                try
-                {
-                    return decimal.Round((Remuneracion_Minima + IESS_PATRONAL + IESS_PERSONAL), 2);
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
-                
+                return decimal.Round(RemuneracionMinima * Constants.IESSPersonalPercentage, 2);
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        private decimal CalculateTotal()
+        {
+            try
+            {
+                return decimal.Round((RemuneracionMinima + IESS_Patronal + IESS_Personal), 2);
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
 
@@ -195,4 +195,10 @@ namespace MetodologiaDeDesarrolloGrupo3App.Models.Trabajador
         [JsonProperty("Mensaje")]
         public string Mensaje { get; set; }
     }
+     public static class Constants
+    {
+        public const decimal IESSPatronalPercentage = 0.1115m;
+        public const decimal IESSPersonalPercentage = 0.0945m;
+    }
+    #endregion
 }
